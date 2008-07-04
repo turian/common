@@ -1,7 +1,7 @@
 """
 Feature mapping.
 
-A feature map is idenfied by a unique name, e.g. "parsing features, experiment 35".
+A feature map is identified by a unique name, e.g. "parsing features, experiment 35".
 This unique name also determines the name of the on-disk version of the feature map.
 
 @todo: This should be rewritten to be more Pythonic. Perhaps use a class?
@@ -15,8 +15,9 @@ to a L{FeatureMap}, the on-disk version of the feature map is
 updated. Alternately, synchronize to disk when the object is destroyed.
 """
 
-from common import myopen
+from common.file import myopen
 import pickle
+import sys
 
 # We want this map to be a singleton
 name_to_fmap = {}
@@ -87,10 +88,13 @@ class FeatureMap:
         """ Return True iff this str is in the map """
         return str in self.map
 
-    def id(self, str):
-        """ Get the ID for this string. Add a new ID if not is available """
-        """ @todo: Don't want to synchronize every add, this may be too slow. """
-        if str not in self.map:
+    def id(self, str, can_add=False):
+        """
+        Get the ID for this string.
+        @param can_add: Add a new ID if not is available.
+        @todo: Don't want to synchronize every add, this may be too slow.
+        """
+        if can_add and str not in self.map:
             if self.readonly: raise KeyError(self.name, str)
             l = self.len
             self.map[str] = l
@@ -123,7 +127,7 @@ class FeatureMap:
         try:
             f = myopen(self.filename, "rb")
             (self.map, self.reverse_map) = pickle.load(f)
-        except IOError: print "Could not open %s" % self.filename
+        except IOError: sys.stderr.write("Could not load from %s\n" % self.filename)
 
     def dump(self):
         """ Dump the map to disk. """
