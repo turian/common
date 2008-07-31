@@ -10,3 +10,5 @@ def print_timing(func):
         return res
     return wrapper
 
+def gmtimestr():
+    return time.strftime("%Y-%m-%d_%H-%M-%S", time.gmtime())
