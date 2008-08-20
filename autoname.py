@@ -58,16 +58,21 @@ class AutoName(object):
                  if hasattr(val, 'name'): 
                      val.name = key
 
-def name_variables(dict):
+def name_variables(dict, prefix=None):
     '''L{dict} is a dictionnary containing objects, indexed by the name
     of the corresponding variable. This method fills the 'name' field of
     every object, with the corresponding key.
+    If L{prefix} is a string, it will append it in front of every key.
     Usually called by: "name_variables(local())'''
     # Name objects after their variable name
+    if isinstance(prefix, str):
+        prefix = '%s.' % prefix
+    else:
+        prefix = ''
     for key, val in dict.items():
         assert type(key) is str
-        if hasattr(val, 'name'):
-            val.name = key
+        if hasattr(val, 'name') and val.name is None:
+            val.name = prefix + key
 
 def set_fields(obj, dict):
     '''Exports a dictionary into an object's variables namespace.
