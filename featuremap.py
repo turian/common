@@ -82,7 +82,20 @@ class FeatureMap:
 
         if self.synchronize:
             # Try loading map from disk
-            self.load()
+            try:
+                self.load()
+            except:
+                import time, random
+                s = 1 + random.Random().random() * 5
+                sys.stderr.write("Vocabulary read error. Sleeping for %f seconds and retrying...\n" % s)
+                time.sleep(s)
+                try:
+                    self.load()
+                except:
+                    import time, random
+                    s = 5 + random.Random().random() * 10
+                    sys.stderr.write("Vocabulary read error. Sleeping for %f seconds and retrying...\n" % s)
+                    time.sleep(s)
 
     def exists(self, str):
         """ Return True iff this str is in the map """

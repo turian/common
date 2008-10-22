@@ -25,14 +25,14 @@ def vars_seq(modules, regex="^[A-Za-z]"):
 def open_canonical_directory(modules):
     """
     For these modules, create a canonical directory to hold this run's output.
-    Write the module values to 'run-HASH/parameters.txt'
+    Write the module values to 'LOGS.NOBACKUP/run-HASH/parameters.txt'
     @note: Directory is a hash for right now.
     @todo: Make the directory name as human-readable as possible, maybe
     with optional human-readable parameters in the name.
     """
     import sys, os, os.path, hashlib
     s = vars_seq(modules)
-    d = "run-%s" % hashlib.sha224(s).hexdigest()
+    d = "LOGS.NOBACKUP/run-%s" % hashlib.sha224(s).hexdigest()
     sys.stderr.write("Opening canonical directory: %s\n" % d)
     if not os.path.exists(d): os.mkdir(d)
     assert os.path.exists(d)
