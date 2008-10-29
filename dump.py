@@ -1,3 +1,9 @@
+"""
+Dump job options and parameters to RUNDIR-hash/parameters.txt
+@todo: Make this cleaner.
+@todo: Allow user to choose dump file.
+"""
+
 from types import *
 def vars(module, regex="^[A-Za-z]"):
     """
