@@ -5,7 +5,7 @@ import datetime
 
 __initrealtime = os.times()[4]
 
-def str():
+def stats():
     """
     Return a string of statistics:
     nodename time: user+sys elapsed, realtime elapsed, CPU usage, memory usage
