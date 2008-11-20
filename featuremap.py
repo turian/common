@@ -147,3 +147,6 @@ class FeatureMap:
         assert self.synchronize
         f = myopen(self.filename, "wb")
         pickle.dump((self.map, self.reverse_map), f)
+
+    def __str__(self):
+        return "(%d) %s" % (self.len, self.map.keys())
