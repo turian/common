@@ -37,3 +37,14 @@ def ensuredir(dir):
        sys.stderr.write("Creating directory: %s\n" % dir)
        os.makedirs(dir)
     assert os.path.isdir(dir)
+
+def ascend_find(name, dir=os.getcwd()):
+    """
+    Crawl up the directory hierarchy from dir towards root, and return
+    the first time we find a file 'name'.
+    """
+    p = os.path.join(dir, name)
+    if os.path.exists(p): return p
+    updir = os.path.dirname(dir)
+    assert updir != dir
+    return ascend_find(name, dir=updir)

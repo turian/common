@@ -8,3 +8,7 @@ on pylearn-dev
 
 
 Originally tracked by mercurial in pylearn.
+
+REQUIREMENTS:
+    * path.py:
+        http://pypi.python.org/pypi/path.py
