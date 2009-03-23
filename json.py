@@ -19,8 +19,28 @@ if cjson.__version__ != "1.0.6":
 encode = cjson.encode
 decode = cjson.decode
 
+loads = decode
+dumps = encode
+
 from common.file import myopen
+def load(file):
+    """
+    Load JSON from a stream.
+    """
+    return decode(file.read())
+def dump(file, object):
+    """
+    Dump JSON to a stream.
+    """
+    return file.write(encode(filename, object))
+
 def loadfile(filename):
-    return decode(myopen(filename).read())
+    """
+    Load JSON from a filename.
+    """
+    return load(myopen(filename))
 def dumpfile(filename, object):
-    return myopen(file, "wb").write(encode(filename, object))
+    """
+    Dump JSON to a filename.
+    """
+    return dump(myopen(filename, "wb"))

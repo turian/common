@@ -6,8 +6,12 @@ def myopen(filename, mode="r", bufsize=-1):
     open(), detecting .gz and .bz2 file suffixes
     """
     if filename[-3:] == ".gz":
+        if mode == "r" or mode == "rt": mode = "rb"
+        elif mode == "w" or mode == "wt": mode = "wb"
         return gzip.open(filename, mode, bufsize)
     elif filename[-4:] == ".bz2":
+        if mode == "r" or mode == "rt": mode = "rb"
+        elif mode == "w" or mode == "wt": mode = "wb"
         return bz2.open(filename, mode, bufsize)
     else:
         return open(filename, mode, bufsize)
