@@ -13,14 +13,17 @@ except ImportError:
     sys.stderr.write("WARNING: Could not load libyaml C implementation.\n")
     from yaml import Loader, Dumper
 
-def load(*args, **kwargs):
-    yaml.load(args, kwargs, Loader=Loader)
+def dump(var):
+    return yaml.dump(var, Dumper=Dumper)
 
-def load_all(*args, **kwargs):
-    yaml.load(args, kwargs, Loader=Loader)
+#def load(*args, **kwargs):
+#    return yaml.load(args, kwargs, Loader=Loader)
 
-def dump(*args, **kwargs):
-    yaml.dump(args, kwargs, Dumper=Dumper)
-
-def dump_all(*args, **kwargs):
-    yaml.dump_all(args, kwargs, Dumper=Dumper)
+#def load_all(*args, **kwargs):
+#    return yaml.load(args, kwargs, Loader=Loader)
+#
+#def dump(*args, **kwargs):
+#    return yaml.dump(args, kwargs, Dumper=Dumper)
+#
+#def dump_all(*args, **kwargs):
+#    return yaml.dump_all(args, kwargs, Dumper=Dumper)
