@@ -44,9 +44,9 @@ def read(suffix=None):
         # Now delete relative locations, since we only care about the absolute ones
         del h["work locations"]
     
-    print >> sys.stderr, "# BEGIN %s HYPERPARAMETERS" % suffix
-    print >> sys.stderr, yaml.dump({suffix: h}),
-    print >> sys.stderr, "# END %s HYPERPARAMETERS" % suffix
+#    print >> sys.stderr, "# BEGIN %s HYPERPARAMETERS" % suffix
+#    print >> sys.stderr, yaml.dump({suffix: h}),
+#    print >> sys.stderr, "# END %s HYPERPARAMETERS" % suffix
 
     _HYPERPARAMETERS[suffix] = h
     return _HYPERPARAMETERS[suffix]

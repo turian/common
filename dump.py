@@ -17,7 +17,8 @@ def create_canonical_directory(*vars):
     import sys, os, os.path, hashlib
     s = myyaml.dump(vars)
     d = "LOGS.NOBACKUP/run-%s" % hashlib.sha224(s).hexdigest()
-    sys.stderr.write("Opening canonical directory: %s\n" % d)
+    sys.stderr.write("common.dump.create_canonical_directory: Opening canonical directory: %s\n" % d)
+    sys.stderr.write("common.dump.create_canonical_directory: for following values\n%s\n" % s)
     if not os.path.exists(d): os.mkdir(d)
     assert os.path.exists(d)
     params = os.path.join(d, "jobparameters.yaml")
