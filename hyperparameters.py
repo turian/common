@@ -4,6 +4,8 @@ Module for reading hyperparameters.
 @todo: Maybe ensure that script locations are executable.
 """
 
+import sys, yaml
+
 _HYPERPARAMETERS = {}
 
 def read(suffix=None):
@@ -11,9 +13,10 @@ def read(suffix=None):
     suffix is the name of these hyperparameters, e.g. "nlpreprocess"
     for the "hyperparameters.nlpreprocess.yaml" file.
     """
+    global _HYPERPARAMETERS
     if suffix in _HYPERPARAMETERS: return _HYPERPARAMETERS[suffix]
 
-    import common.file, os.path, yaml, sys
+    import common.file, os.path
     if suffix: f = "hyperparameters.%s.yaml" % suffix
     else: f = "hyperparameters.yaml" % suffix
     __file = common.file.ascend_find(f)
@@ -50,3 +53,17 @@ def read(suffix=None):
 
     _HYPERPARAMETERS[suffix] = h
     return _HYPERPARAMETERS[suffix]
+
+def set(yamlparams, suffix=None):
+    """
+    Set the hyperparameters for a particular suffix, using these YAML values.
+    """
+    global _HYPERPARAMETERS
+    print >> sys.stderr, "Setting hyperparameters for suffix", suffix
+    assert suffix not in _HYPERPARAMETERS
+    params = yaml.load(yamlparams)
+
+    assert len(params) == 1     # WHY IS THIS NECESSARY?
+    params = params[0]
+
+    _HYPERPARAMETERS[suffix] = params
