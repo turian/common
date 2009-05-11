@@ -42,7 +42,7 @@ def ensuredir(dir):
        os.makedirs(dir)
     assert os.path.isdir(dir)
 
-def ascend_find(name, dir=os.getcwd()):
+def ascend_find_help(name, dir):
     """
     Crawl up the directory hierarchy from dir towards root, and return
     the first time we find a file 'name'.
@@ -52,3 +52,15 @@ def ascend_find(name, dir=os.getcwd()):
     updir = os.path.dirname(dir)
     assert updir != dir
     return ascend_find(name, dir=updir)
+
+def ascend_find(name, dir=os.getcwd()):
+    """
+    Crawl up the directory hierarchy from dir towards root, and return
+    the first time we find a file 'name'.
+    Try first from os.getcwd, and then from os.dirname(sys.argv[0])
+    """
+    try:
+        return ascend_find_help(name, dir)
+    except:
+        print >> sys.stderr, "WARNING: ascend_find(%s, %s) failed. Trying ascend_find(%s, %s)." % (name, dir, name, os.path.dirname(sys.argv[0]))
+        return ascend_find_help(name, os.path.dirname(sys.argv[0]))
