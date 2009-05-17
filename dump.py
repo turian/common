@@ -107,5 +107,5 @@ def vars_seq(modules, regex="^[A-Za-z]"):
 #    return s
     d = {}
     for m in modules:
-        d[module.__name__] = vars(m, regex)
+        d[m.__name__] = vars(m, regex)
     return d
