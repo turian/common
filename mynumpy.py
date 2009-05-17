@@ -17,3 +17,28 @@ def to_vector(v):
         v.resize(v.size)
     assert len(v.shape) == 1
     return v
+
+def batch_apply(f, x, batchsize=1024, verbose=True):
+    """
+    Slice x in batches of size batchsize, run f on x, and return a list of results.
+    @warning: The function should *NOT* return any indexes because f receives
+    index numbers that are wrong. (The indexes should adjust for the current min.)
+    """
+    import sys
+    from common.stats import stats
+
+    ret = []
+    min = 0
+    max = batchsize
+    while min < x.shape[0]:
+        if max > x.shape[0]: max = x.shape[0]
+        if verbose:
+            print >> sys.stderr, "Running on %d:%d..." % (min, max)
+            print >> sys.stderr, stats()
+
+        tmpx = x[min:max]
+        ret.append(f(tmpx))
+        min += batchsize
+        max += batchsize
+
+    return ret
