@@ -23,8 +23,8 @@ def reparse(values):
             ty = "float"
         elif type(v) == type(1):
             ty = "int"
-#        elif type(v) == type(True):
-#            ty = "bool"
+        elif type(v) == type(True):
+            ty = "bool"
         else:
             import sys
             print >> sys.stderr, "common.options.reparse: Skipping %s, with type %s" % (key, type(v))
@@ -34,10 +34,8 @@ def reparse(values):
         if ty != "bool":
             parser.add_option("--%s" % newkey, dest=key, default=v, action="store", type=ty)
         else:
-            assert 0    # This is not yet implemented
-#            if v:
-#                parser.add_option("--no_%s" % newkey, dest=key, action="store_false")
-#                parser.set_defaults(convolution_over_tokens=True)
+            parser.add_option("--%s" % newkey, action="store_true", dest=key, default=v)
+            parser.add_option("--no_%s" % newkey, action="store_false", dest=key, default=v)
 
     (options, args) = parser.parse_args()
     for newkey in newkey_to_key:
