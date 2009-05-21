@@ -26,6 +26,7 @@ def weighted_sample(indexed_weights):
     """
     Sample an index, according to the weights in indexed_weights.
     indexed_weights must be obtained from the build() functon.
+    Return the index, and its probability.
     """
     assert len(indexed_weights) == 3 
     assert indexed_weights[0] == "indexed_weights"
@@ -38,4 +39,5 @@ def weighted_sample(indexed_weights):
     idx = bisect(indexed_weights, v)
     idx -= 1
     assert idx >= 0 and idx < len(indexed_weights)
-    return idx
+    pr = 1. * (indexed_weights[idx+1] - indexed_weights[idx]) / tot
+    return idx, pr
