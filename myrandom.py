@@ -39,5 +39,8 @@ def weighted_sample(indexed_weights):
     idx = bisect(indexed_weights, v)
     idx -= 1
     assert idx >= 0 and idx < len(indexed_weights)
-    pr = 1. * (indexed_weights[idx+1] - indexed_weights[idx]) / tot
+    if idx == len(indexed_weights) - 1:
+        pr = 1. * (tot - indexed_weights[idx]) / tot
+    else:
+        pr = 1. * (indexed_weights[idx+1] - indexed_weights[idx]) / tot
     return idx, pr
