@@ -82,20 +82,8 @@ class FeatureMap:
 
         if self.synchronize:
             # Try loading map from disk
-            try:
-                self.load()
-            except:
-                import time, random
-                s = 1 + random.Random().random() * 5
-                sys.stderr.write("Vocabulary read error. Sleeping for %f seconds and retrying...\n" % s)
-                time.sleep(s)
-                try:
-                    self.load()
-                except:
-                    import time, random
-                    s = 5 + random.Random().random() * 10
-                    sys.stderr.write("Vocabulary read error. Sleeping for %f seconds and retrying...\n" % s)
-                    time.sleep(s)
+            import common.retry
+            common.retry.retry(self.load, "Vocabulary read error")
 
     def exists(self, str):
         """ Return True iff this str is in the map """
@@ -137,10 +125,11 @@ class FeatureMap:
     def load(self):
         """ Load the map from disk. """
         assert self.synchronize
-        try:
+        def loadhelp():
             f = myopen(self.filename, "rb")
             (self.map, self.reverse_map) = pickle.load(f)
-        except IOError: sys.stderr.write("Could not load from %s\n" % self.filename)
+        import common.retry
+        common.retry.retry(loadhelp, "Could not load from %s" % self.filename)
 
     def dump(self):
         """ Dump the map to disk. """

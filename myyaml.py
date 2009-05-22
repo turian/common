@@ -16,6 +16,9 @@ except ImportError:
 def dump(var):
     return yaml.dump(var, Dumper=Dumper)
 
+#def load(stream):
+#    return yaml.load(stream, Loader=Loader)
+
 #def load(*args, **kwargs):
 #    return yaml.load(args, kwargs, Loader=Loader)
 
