@@ -20,3 +20,7 @@ def dumpfile(object, filename):
     Dump JSON to a filename.
     """
     return dump(object, myopen(filename, "wb"))
+
+import jsonlib
+def fastloads(str): return jsonlib.read(str, use_float=True)
+fastdumps = jsonlib.write
