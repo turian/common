@@ -81,9 +81,7 @@ class FeatureMap:
         assert self.name or not self.synchronize
 
         if self.synchronize:
-            # Try loading map from disk
-            import common.retry
-            common.retry.retry(self.load, "Vocabulary read error")
+            self.load()
 
     def exists(self, str):
         """ Return True iff this str is in the map """
@@ -123,13 +121,17 @@ class FeatureMap:
     filename = property(lambda self: "fmap.%s.pkl.gz" % self.name, doc="The on-disk file synchronized to this feature map.")
 
     def load(self):
+        assert not self.readonly
+
         """ Load the map from disk. """
         assert self.synchronize
         def loadhelp():
             f = myopen(self.filename, "rb")
             (self.map, self.reverse_map) = pickle.load(f)
-        import common.retry
-        common.retry.retry(loadhelp, "Could not load from %s" % self.filename)
+        import os.path
+        if os.path.exists(self.filename):
+            import common.retry
+            common.retry.retry(loadhelp, "Could not load from %s" % self.filename)
 
     def dump(self):
         """ Dump the map to disk. """
