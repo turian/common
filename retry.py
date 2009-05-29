@@ -20,6 +20,6 @@ def retry(f, msg, RETRIES=3, BASEWAIT=0, WAITVAR=0, WAITINC=5.):
     if RETRIES==0: return f()
     try:
         return f()
-    except Exception as e:
+    except Exception, e:
         print >> sys.stderr, "%s:" % msg, type(e), e, ". %d retries left..." % RETRIES
         return retry(f, msg, RETRIES-1, BASEWAIT+WAITINC, WAITVAR+WAITINC, WAITINC)
