@@ -8,6 +8,9 @@ import os.path
 import common.json
 
 class JSONHDB(HDB):
+    """
+    A hashdb wrapper, which automatically converts values to- and from- JSON.
+    """
     def __getitem__(self, key):
         return common.json.loads(HDB.__getitem__(self, key))
     def __setitem__(self, key, value):
