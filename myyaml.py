@@ -22,6 +22,8 @@ def load(stream):
 #def load(*args, **kwargs):
 #    return yaml.load(args, kwargs, Loader=Loader)
 
+def load_all(stream):
+    return yaml.load_all(stream, Loader=Loader)
 #def load_all(*args, **kwargs):
 #    return yaml.load(args, kwargs, Loader=Loader)
 #
