@@ -4,6 +4,7 @@ Uses Tokyo Cabinet hashdb.
 """
 
 from pytc import HDB, HDBOWRITER, HDBOCREAT, HDBTBZIP, HDBOREADER
+#from tc import HDB, HDBOWRITER, HDBOCREAT, HDBTBZIP, HDBOREADER
 import os.path
 import common.json
 import common.retry
