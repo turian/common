@@ -6,6 +6,7 @@ Uses Tokyo Cabinet hashdb.
 from pytc import HDB, HDBOWRITER, HDBOCREAT, HDBTBZIP, HDBOREADER
 import os.path
 import common.json
+import common.retry
 
 class JSONHDB(HDB):
     """
@@ -48,7 +49,9 @@ def read(filename):
     We assume that each value is a JSON object.
     """
     hdb = JSONHDB()
-    hdb.open(filename, HDBOREADER)
+    def hdbopen():
+        hdb.open(filename, HDBOREADER)
+    common.retry.retry(hdbopen, "Could not HDB open %s" % filename)
     
     # traverse records
     hdb.iterinit()
