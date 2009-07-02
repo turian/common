@@ -24,6 +24,9 @@ class JSONHDB(HDB):
         return common.json.loads(HDB.get(self, key))
     def put(self, key, value):
         return HDB.put(self, key, common.json.dumps(value))
+    def random_key(self):
+        import random
+        return random.choice(self.keys())
 
 def tune(hdb):
     """
@@ -49,6 +52,8 @@ def write_open(filename):
     """
     hdb = JSONHDB()
     tune(hdb)
+    hdb.open(filename, HDBOCREAT | HDBOWRITER)
+    return hdb
 
 def create(filename):
     """
@@ -58,17 +63,23 @@ def create(filename):
     assert not os.path.exists(filename)
     return write_open(filename)
 
+def read_open(filename):
+    """
+    Open a hashdb with this filename for writing.
+    """
+    hdb = JSONHDB()
+    def hdbopen():
+        hdb.open(filename, HDBOREADER)
+    common.retry.retry(hdbopen, "Could not HDB open %s" % filename)
+    return hdb
+
 def read(filename):
     """
     A generator that iterates over the (key, value) pairs in the TCH in filename.
     We assume that each value is a JSON object.
     @todo: Is there a better way to traverse all pairs?
     """
-    hdb = JSONHDB()
-    def hdbopen():
-        hdb.open(filename, HDBOREADER)
-    common.retry.retry(hdbopen, "Could not HDB open %s" % filename)
-    
+    hdb = read_open(filename) 
     # traverse records
     hdb.iterinit()
     for key in hdb.keys():
