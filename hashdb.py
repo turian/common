@@ -24,6 +24,8 @@ class JSONHDB(HDB):
         return common.json.loads(HDB.get(self, key))
     def put(self, key, value):
         return HDB.put(self, key, common.json.dumps(value))
+    def values(self):
+        return [common.json.loads(v) for v in HDB.values(self)]
     def random_key(self):
         import random
         return random.choice(self.keys())
