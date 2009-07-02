@@ -3,7 +3,7 @@ Retry a function several times.
 Useful for when several processes want to read/write the same file, sort of like a quasi-lock.
 """
 
-def retry(f, msg, RETRIES=3, BASEWAIT=0, WAITVAR=0, WAITINC=5.):
+def retry(f, msg, RETRIES=5, BASEWAIT=0, WAITVAR=0, WAITINC=5.):
     """
     Attempt to run f for RETRIES+1 times.
     If there is a problem, catch and output the exception and msg, and retry.

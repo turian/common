@@ -1,6 +1,9 @@
 """
 Wrapper for hash database functions.
 Uses Tokyo Cabinet hashdb.
+
+@note This code is part of Joseph Turian's common python library.
+Please contact him if you would like him to share the rest of the library.
 """
 
 from pytc import HDB, HDBOWRITER, HDBOCREAT, HDBTBZIP, HDBOREADER
@@ -23,6 +26,10 @@ class JSONHDB(HDB):
         return HDB.put(self, key, common.json.dumps(value))
 
 def tune(hdb):
+    """
+    @todo: Unfortunately, the current pytc.hdb.tune doesn't contain
+    default arguments.
+    """
     #     bnum - the number of elements of the bucket array. If it is
     #     not more than 0, the default value is specified. The default value
     #     is 131071. Suggested size of the bucket array is about from 0.5
@@ -42,8 +49,6 @@ def write_open(filename):
     """
     hdb = JSONHDB()
     tune(hdb)
-    hdb.open(filename, HDBOCREAT | HDBOWRITER)
-    return hdb
 
 def create(filename):
     """
@@ -57,6 +62,7 @@ def read(filename):
     """
     A generator that iterates over the (key, value) pairs in the TCH in filename.
     We assume that each value is a JSON object.
+    @todo: Is there a better way to traverse all pairs?
     """
     hdb = JSONHDB()
     def hdbopen():
