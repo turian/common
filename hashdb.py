@@ -22,13 +22,7 @@ class JSONHDB(HDB):
     def put(self, key, value):
         return HDB.put(self, key, common.json.dumps(value))
 
-def create(filename):
-    """
-    Create a hashdb with this filename.
-    Abort if this file already exists.
-    """
-    assert not os.path.exists(filename)
-    hdb = JSONHDB()
+def tune(hdb):
     #     bnum - the number of elements of the bucket array. If it is
     #     not more than 0, the default value is specified. The default value
     #     is 131071. Suggested size of the bucket array is about from 0.5
@@ -41,8 +35,23 @@ def create(filename):
     #       specified. The default value is 10 standing for 2^10=1024.
     hdb.tune(bnum=131071, apow=4, fpow=10, opts=HDBTBZIP)
     #hdb.tune(bnum=131071, apow=4, fpow=10, opts=0)
+
+def write_open(filename):
+    """
+    Open a hashdb with this filename for writing.
+    """
+    hdb = JSONHDB()
+    tune(hdb)
     hdb.open(filename, HDBOCREAT | HDBOWRITER)
     return hdb
+
+def create(filename):
+    """
+    Create a hashdb with this filename.
+    Abort if this file already exists.
+    """
+    assert not os.path.exists(filename)
+    return write_open(filename)
 
 def read(filename):
     """

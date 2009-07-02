@@ -7,6 +7,11 @@ def reparse(values):
     Given a dict of values, construct an OptionParser and attempt to
     override its values with any command-line arguments.
     We return the overriden dictionary.
+
+    Here is a common usage:
+        import common.hyperparameters, common.options
+        HYPERPARAMETERS = common.hyperparameters.read("sparse_input")
+        common.options.reparse(HYPERPARAMETERS)
     """
     from optparse import OptionParser
     parser = OptionParser()
