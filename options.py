@@ -2,19 +2,24 @@
 Command-line options.
 """
 
-def reparse(values):
+def reparse(values, parser=None):
     """
     Given a dict of values, construct an OptionParser and attempt to
     override its values with any command-line arguments.
     We return the overriden dictionary.
+
+    If parser is given, we use the values in it but update using value.
+    @warning: We potentially clobber existing values in parser.
 
     Here is a common usage:
         import common.hyperparameters, common.options
         HYPERPARAMETERS = common.hyperparameters.read("sparse_input")
         common.options.reparse(HYPERPARAMETERS)
     """
-    from optparse import OptionParser
-    parser = OptionParser()
+    if parser is None:
+        from optparse import OptionParser
+        parser = OptionParser()
+    assert parser is not None
 
     import re
     wsre = re.compile("\s+")
@@ -50,5 +55,4 @@ def reparse(values):
             print >> sys.stderr, "common.options.reparse: %s %s => %s" % (key, values[key], newvalue)
             values[key] = newvalue
 
-    return values
-
+    return values, options, args
