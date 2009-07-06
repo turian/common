@@ -29,6 +29,12 @@ def create_canonical_directory(*vars):
 def load_canonical_directory(d):
     """
     Open this run directory, and return a YAML string containing those parameters.
+
+    Common usage:
+        import common.dump, yaml
+        parameters = common.dump.load_canonical_directory(options.modeldir)
+        import common.hyperparameters
+        common.hyperparameters.set(parameters, "attardi07_english_ptb")
     """
     import os.path
     assert os.path.exists(d)
