@@ -18,20 +18,23 @@ updated. Alternately, synchronize to disk when the object is destroyed.
 from common.file import myopen
 import pickle
 import sys
+import os.path
 
 # We want this map to be a singleton
 name_to_fmap = {}
 
-def get(name=None, synchronize=True):
+def get(name=None, directory=".", synchronize=True):
     """
-    Get the L{FeatureMap} for a particular feature name.
+    Get the L{FeatureMap} for a particular feature name from a particular directory.
     """
     global name_to_fmap
-    if name not in name_to_fmap:
+    nom = (name, directory)
+    if nom not in name_to_fmap:
         # Create a new L{FeatureMap}
-        name_to_fmap[name] = FeatureMap(name, synchronize)
-    fmap = name_to_fmap[name]
+        name_to_fmap[nom] = FeatureMap(name, directory=directory, synchronize=synchronize)
+    fmap = name_to_fmap[nom]
     assert fmap.name == name
+    assert fmap.directory == directory
     assert fmap.synchronize == synchronize
     return fmap
 
@@ -46,10 +49,12 @@ class KeyError(Exception):
     """Exception raised for keys missing from a readonly FeatureMap
     Attributes:
         name -- Name of the FeatureMap raising the error.
+        directory -- Directory of the FeatureMap raising the error.
         key -- Key not present.
     """
-    def __init__(self, name, key):
+    def __init__(self, name, directory, key):
         self.name = name
+        self.directory = directory
         self.key = key
 
 
@@ -70,8 +75,9 @@ class FeatureMap:
 #    map = {}
 #    readonly = False        # If True, then each time we look for an ID
                             # that is not present we throw a ValueError
-    def __init__(self, name=None, synchronize=True):
+    def __init__(self, name=None, directory=".", synchronize=True):
         self.name = name
+        self.directory = directory
         self.synchronize = synchronize
         self.map = {}
         self.reverse_map = {}
@@ -94,7 +100,7 @@ class FeatureMap:
         @todo: Don't want to synchronize every add, this may be too slow.
         """
         if can_add and str not in self.map:
-            if self.readonly: raise KeyError(self.name, str)
+            if self.readonly: raise KeyError(self.name, self.directory, str)
             l = self.len
             self.map[str] = l
             self.reverse_map[l] = str
@@ -118,7 +124,7 @@ class FeatureMap:
 #        return idset
 
     len = property(lambda self: len(self.map), doc="Number of different feature IDs")
-    filename = property(lambda self: "fmap.%s.pkl.gz" % self.name, doc="The on-disk file synchronized to this feature map.")
+    filename = property(lambda self: os.path.join(self.directory, "fmap.%s.pkl.gz" % self.name), doc="The on-disk file synchronized to this feature map.")
 
     def load(self):
         assert not self.readonly
