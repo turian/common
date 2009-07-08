@@ -1,0 +1,5 @@
+Common python code.
+
+REQUIREMENTS:
+    * path.py:
+        http://pypi.python.org/pypi/path.py

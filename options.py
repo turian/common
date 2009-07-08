@@ -14,7 +14,7 @@ def reparse(values, parser=None):
     Here is a common usage:
         import common.hyperparameters, common.options
         HYPERPARAMETERS = common.hyperparameters.read("sparse_input")
-        common.options.reparse(HYPERPARAMETERS)
+        HYPERPARAMETERS, options, args = common.options.reparse(HYPERPARAMETERS)
     """
     if parser is None:
         from optparse import OptionParser
@@ -23,6 +23,13 @@ def reparse(values, parser=None):
 
     import re
     wsre = re.compile("\s+")
+
+    # We don't want hyperparameters to be read more than once before
+    # reparsing them. Otherwise, other modules that read the
+    # hyperparameters could have stale values.
+    if "__suffix" in values:
+        import common.hyperparameters
+        assert common.hyperparameters._readcount[values["__suffix"]] == 1
 
     newkey_to_key = {}
     for key in values:

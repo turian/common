@@ -1,20 +1,33 @@
 """
 Module for reading hyperparameters.
 
+@warning: Want to make HYPERPARAMETERS read-only after someone accesses
+values in it. Otherwise, one module could call hyperparameters.read()
+and use HYPERPARAMETERS values, then another module could call 
+options.reparse(hyperparameters) and change the HYPERPARAMETERS.
+However, this protecton is not yet offered.
+
 @todo: Maybe ensure that script locations are executable.
 """
 
 import sys, yaml
 
 _HYPERPARAMETERS = {}
+from collections import defaultdict
+_readcount = defaultdict(int)
 
 def read(suffix=None):
     """
     suffix is the name of these hyperparameters, e.g. "nlpreprocess"
     for the "hyperparameters.nlpreprocess.yaml" file.
+
+    Each time we read a set of hyperparameters, we increment
+    _readcount[suffix].
     """
     global _HYPERPARAMETERS
-    if suffix in _HYPERPARAMETERS: return _HYPERPARAMETERS[suffix]
+    _readcount[suffix] += 1
+    if suffix in _HYPERPARAMETERS:
+        return _HYPERPARAMETERS[suffix]
 
     import common.file, os.path
     if suffix: f = "hyperparameters.%s.yaml" % suffix
@@ -52,6 +65,7 @@ def read(suffix=None):
 #    print >> sys.stderr, "# END %s HYPERPARAMETERS" % suffix
 
     _HYPERPARAMETERS[suffix] = h
+    _HYPERPARAMETERS[suffix]["__suffix"] = suffix
     return _HYPERPARAMETERS[suffix]
 
 def set(yamlparams, suffix=None):

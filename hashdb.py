@@ -29,6 +29,8 @@ class JSONHDB(HDB):
     def random_key(self):
         import random
         return random.choice(self.keys())
+    def close(self):
+        return HDB.close(self)
 
 def tune(hdb):
     """
