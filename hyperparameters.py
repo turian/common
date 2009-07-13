@@ -25,9 +25,11 @@ def read(suffix=None):
     _readcount[suffix].
     """
     global _HYPERPARAMETERS
+
     _readcount[suffix] += 1
     if suffix in _HYPERPARAMETERS:
         return _HYPERPARAMETERS[suffix]
+    print >> sys.stderr, "Reading hyperparameters for suffix", suffix
 
     import common.file, os.path
     if suffix: f = "hyperparameters.%s.yaml" % suffix
