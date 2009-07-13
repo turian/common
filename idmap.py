@@ -49,3 +49,8 @@ class IDmap:
     def key(self, id):
         """ Get the key for this ID. """
         return self.reverse_map[id]
+
+    @property
+    def len(self):
+        assert len(self.map) == len(self.reverse_map)
+        return len(self.map)
