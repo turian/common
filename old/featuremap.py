@@ -125,6 +125,7 @@ class FeatureMap:
 
     len = property(lambda self: len(self.map), doc="Number of different feature IDs")
     filename = property(lambda self: os.path.join(self.directory, "fmap.%s.pkl.gz" % self.name), doc="The on-disk file synchronized to this feature map.")
+    all = property(lambda self: self.map.keys(), doc="Return all terms")
 
     def load(self):
         assert not self.readonly
