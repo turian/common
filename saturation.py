@@ -10,7 +10,7 @@ def stats(presquash, MAX=5):
         * The median value over units of the median value over all examples.
         * The top 5 values over units of the top value over all examples.
     """
-    assert len(presquash.shape) == 2
+    assert presquash.ndim == 2
     abs_presquash = numpy.abs(presquash)
     med = numpy.median(numpy.median(abs_presquash, axis=0))
     abs_presquash = abs_presquash.max(axis=0)
