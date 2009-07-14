@@ -22,6 +22,8 @@ Yoshua Bengio:
 
 """
 
+import math
+
 class MovingAverage:
     """
     .mean and .variance expose the moving average estimates.
@@ -41,4 +43,5 @@ class MovingAverage:
         # Yoshua concurs.
         this_variance = (v - self.mean) * (v - self.mean)
         self.variance = self.variance - (2. / self.cnt) * (self.variance - this_variance)
-
+    def __str__(self):
+        return "(moving average): mean=%.3f stddev=%.3f" % (self.mean, math.sqrt(self.variance))
