@@ -27,6 +27,6 @@ def threshold(x, min):
             print >> sys.stderr, stats()
     x.eliminate_zeros()
     print >> sys.stderr, "..done applying threshold %.3f to %d rows\nCurrently %d nonzeros (%.3f nonzeros per row)..." % (min, x.shape[0], x.nnz, 1.*x.nnz/x.shape[0])
-    print >> sys.stderr, "\t%s of entries were pruned\n" % common.str.percent(removed, tot)
+    print >> sys.stderr, "\t%s of entries were pruned" % common.str.percent(removed, tot)
     print >> sys.stderr, stats()
     return x
