@@ -2,6 +2,8 @@
 Numpy help.
 """
 
+import numpy
+
 def to_vector(v):
     """
     Take a matrix with one row, and convert it to a vector.
@@ -17,6 +19,20 @@ def to_vector(v):
         v.resize(v.size)
     assert len(v.shape) == 1
     return v
+
+class VStacker:
+    """
+    Vertically stack matrices as they come in, into self.data.
+    """
+    def __init__(self, matrices=None):
+        if matrices is None:
+            self.data = None
+        else:
+            self.data = numpy.vstack(matrices)
+
+    def add(self, m):
+        if self.data is None: self.data = m
+        else: self.data = numpy.vstack([self.data, m])
 
 def batch_apply(f, x, batchsize=1024, verbose=True):
     """
