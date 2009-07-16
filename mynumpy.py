@@ -58,3 +58,6 @@ def batch_apply(f, x, batchsize=1024, verbose=True):
         max += batchsize
 
     return ret
+
+def entropy(p):
+    return -p*numpy.log2(p) - (1-p)*numpy.log2(1-p)
