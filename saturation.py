@@ -2,13 +2,13 @@
 Check neural net units for saturation.
 """
 
-def stats(presquash, MAX=5):
+def stats(presquash, MAX=3):
     import numpy
     """
     Given a 2-D numpy array of presquash values, (examples, units),
     convert to absolute values, and return:
         * The median value over units of the median value over all examples.
-        * The top 5 values over units of the top value over all examples.
+        * The top 3 values over units of the top value over all examples.
     """
     assert presquash.ndim == 2
     abs_presquash = numpy.abs(presquash)
