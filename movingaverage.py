@@ -28,10 +28,11 @@ class MovingAverage:
     """
     .mean and .variance expose the moving average estimates.
     """
-    def __init__(self):
+    def __init__(self, percent=False):
         self.mean = 0.
         self.variance = 0
         self.cnt = 0
+        self.percent = percent
     def add(self, v):
         """
         Add value v to the moving average.
@@ -44,4 +45,7 @@ class MovingAverage:
         this_variance = (v - self.mean) * (v - self.mean)
         self.variance = self.variance - (2. / self.cnt) * (self.variance - this_variance)
     def __str__(self):
-        return "(moving average): mean=%.3f stddev=%.3f" % (self.mean, math.sqrt(self.variance))
+        if self.percent:
+            return "(moving average): mean=%.3f%% stddev=%.3f" % (self.mean, math.sqrt(self.variance))
+        else:
+            return "(moving average): mean=%.3f stddev=%.3f" % (self.mean, math.sqrt(self.variance))
