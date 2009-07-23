@@ -15,9 +15,10 @@ def chopargs(args, lengths):
     for l in lengths:
         if l == 0:
             r.append(args[idx])
+            idx += 1
         else:
             r.append(tuple(args[idx:idx+l]))
-        idx += l
+            idx += l
     assert idx == len(args)
     assert len(r) == len(lengths)
     return r
