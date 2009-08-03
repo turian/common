@@ -5,7 +5,7 @@ Helper functions for app engine.
 from google.appengine.ext import db
 import sys
 
-BATCH_SIZE = 1000
+BATCH_SIZE = 500
 def delete_entire_model(model):
     """
     Delete all entries from a model.
