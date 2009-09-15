@@ -5,3 +5,4 @@ import memory
 import misc
 import mytime
 import str
+import movingaverage

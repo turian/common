@@ -50,6 +50,7 @@ def read(suffix=None):
     
     # Expand ~ and check if locations exist
     for l in h["locations"]:
+#        print h["locations"], l, h["locations"][l]
         h["locations"][l] = os.path.expanduser(h["locations"][l])
         loc = h["locations"][l]
         if not os.path.exists(loc):
