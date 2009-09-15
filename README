@@ -1,5 +1,6 @@
-Common python code.
+Common Python library, especially for text processing and controlling experimental runs
 
 REQUIREMENTS:
     * path.py:
         http://pypi.python.org/pypi/path.py
+    [this may no longer be a requirement]
