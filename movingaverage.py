@@ -49,3 +49,8 @@ class MovingAverage:
             return "(moving average): mean=%.3f%% stddev=%.3f" % (self.mean, math.sqrt(self.variance))
         else:
             return "(moving average): mean=%.3f stddev=%.3f" % (self.mean, math.sqrt(self.variance))
+    def verbose_string(self):
+        if self.percent:
+            return "(moving average): mean=%g%% stddev=%g" % (self.mean, math.sqrt(self.variance))
+        else:
+            return "(moving average): mean=%g stddev=%g" % (self.mean, math.sqrt(self.variance))
