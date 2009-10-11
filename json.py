@@ -25,4 +25,4 @@ import jsonlib
 def fastloads(str): return jsonlib.read(str, use_float=True)
 fastdumps = jsonlib.write
 def fastloadfile(filename): return jsonlib.read(myopen(filename).read(), use_float=True)
-def fastload(file): return jsonlib.read(file, use_float=True)
+def fastload(file): return jsonlib.read(file.read(), use_float=True)
