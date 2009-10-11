@@ -46,6 +46,9 @@ def _converthelp(tree):
                 v[c.tag] = _converthelp(c)
             return v
 
+def convert(element):
+    return _converthelp(element)
+
 def readxml(file):
     """
     Read an XML file and convert it to an object in the Parker convention.
