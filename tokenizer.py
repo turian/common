@@ -14,22 +14,24 @@ NOTE:
     * I chdir into the splitta dir and the chdir to the original working
     directory. This is vestigial code from my 1.02 API and might not
     be necessary anymore.
+
+    * splitta_dir is added to the sys.path automatically, which is
+    probably bad behavior.
 """
 
-import os, os.path, sys, string
-assert os.path.isdir(splitta_dir)
-sys.path.append(splitta_dir)
-
+import os, os.path, string, sys
 import StringIO
 
-import sbd      # The splitta module
-import string
-
-from sbd import SVM_Model, NB_Model
+#from sbd import SVM_Model, NB_Model
 
 models = {}
 
 def tokenize(text, tokenize=False, splitta_dir="/home/joseph/utils/src/splitta.svn/", model_path="model_svm", verbose=False):
+    assert os.path.isdir(splitta_dir)
+    if splitta_dir not in sys.path:
+        sys.path.append(splitta_dir)
+    import sbd      # The splitta module
+
     oldwd = os.getcwd()
     assert os.path.isdir(splitta_dir)
     os.chdir(splitta_dir)
@@ -55,6 +57,5 @@ def tokenize(text, tokenize=False, splitta_dir="/home/joseph/utils/src/splitta.s
     return string.split(output.getvalue(), "\n")
 
 if __name__ == "__main__":
-    import sys
     txt = sys.stdin.read()
     print tokenize(txt)
