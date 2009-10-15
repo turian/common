@@ -3,6 +3,11 @@
 Tokenize a text into one-sentence-per-line (a list of sentences) using splitta.
 
 NOTE:
+    * After you import common.tokenizer, you need the following line:
+        from sbd import SVM_Model
+    Otherwise, you will get the following error:
+        AttributeError: 'module' object has no attribute 'SVM_Model'
+        
     * Unfortunately, there need to be a handful of changes made to
     splitta to get it to work.  First, you have to rename its util.py
     to sbd_util.py (this may not be necessary).
