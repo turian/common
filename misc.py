@@ -1,4 +1,4 @@
-def runcmd(args, input=None):
+def runcmd(args, input=None, acceptable_return_codes=[0]):
     """
     Split args into a list, run this command, and return its output.
     Raise RuntimeError if the command does not return 0.
@@ -13,9 +13,11 @@ def runcmd(args, input=None):
     proc = subprocess.Popen(string.split(args), stdout=subprocess.PIPE, stdin=stdin)
 #    proc = subprocess.Popen(string.split(args), stdout=subprocess.PIPE)
     output = proc.communicate(input=input)[0]
-    if proc.returncode != 0:
+    proc.stdin.close()
+    proc.stdout.close()
+    if proc.returncode not in acceptable_return_codes:
         import exceptions
-        raise exceptions.RuntimeError
+        raise exceptions.RuntimeError("Return code = %d (not in acceptable_return_codes=%s)" % (proc.returncode, acceptable_return_codes))
     return output
 
 def homedir():
