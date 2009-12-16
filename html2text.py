@@ -67,7 +67,7 @@ def batch_nclean(htmls, strip_html_output=True, ncleaner=os.path.expanduser("~/u
         if strip_html_output:
             txts = [htmlre.sub("\n", txt) for txt in txts]
         assert len(txts) == len(htmls)
-    except AssertionError:
+    except:
         print >> sys.stderr, "Problem in batch_nclean: %s" % sys.exc_info()[0]
     shutil.rmtree(indir, ignore_errors=False, onerror=lambda function, path, excinfo: sys.stderr.write("Could not shutil.rmtree, function=%s, path=%s, excinfo=%s\n" % function, path, excinfo))
     shutil.rmtree(outdir, ignore_errors=False, onerror=lambda function, path, excinfo: sys.stderr.write("Could not shutil.rmtree, function=%s, path=%s, excinfo=%s\n" % function, path, excinfo))
