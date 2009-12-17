@@ -19,6 +19,17 @@ NOTE:
     probably bad behavior.
 """
 
+
+# Import Psyco if available
+import sys
+try:
+    import psyco
+    psyco.full()
+    print >> sys.stderr, "Imported psyco. Sweet!"
+except ImportError:
+    print >> sys.stderr, "Cannot import psyco"
+
+
 import os, os.path, string, sys
 import StringIO
 
