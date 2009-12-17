@@ -7,6 +7,7 @@ def reparse(values, parser=None):
     Given a dict of values, construct an OptionParser and attempt to
     override its values with any command-line arguments.
     We return the overriden dictionary.
+    We also return a string contain all keys and their values that were overriden.
 
     If parser is given, we use the values in it but update using value.
     @warning: We potentially clobber existing values in parser.
@@ -14,7 +15,7 @@ def reparse(values, parser=None):
     Here is a common usage:
         import common.hyperparameters, common.options
         HYPERPARAMETERS = common.hyperparameters.read("sparse_input")
-        HYPERPARAMETERS, options, args = common.options.reparse(HYPERPARAMETERS)
+        HYPERPARAMETERS, options, args, newkeystr = common.options.reparse(HYPERPARAMETERS)
     """
     if parser is None:
         from optparse import OptionParser
@@ -55,11 +56,15 @@ def reparse(values, parser=None):
             parser.add_option("--no_%s" % newkey, action="store_false", dest=key, default=v)
 
     (options, args) = parser.parse_args()
+#    newkeys = {}
+    newkeystr = ""
     for newkey in newkey_to_key:
         key = newkey_to_key[newkey]
         newvalue = getattr(options, key)
         if newvalue != values[key]:
             print >> sys.stderr, "common.options.reparse: %s %s => %s" % (key, values[key], newvalue)
             values[key] = newvalue
+            newkeystr += ".%s=%s" % (key, newvalue)
+#            newkeys[key] = True
 
-    return values, options, args
+    return values, options, args, newkeystr
