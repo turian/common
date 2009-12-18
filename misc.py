@@ -13,7 +13,8 @@ def runcmd(args, input=None, acceptable_return_codes=[0]):
     proc = subprocess.Popen(string.split(args), stdout=subprocess.PIPE, stdin=stdin)
 #    proc = subprocess.Popen(string.split(args), stdout=subprocess.PIPE)
     output = proc.communicate(input=input)[0]
-    proc.stdin.close()
+    if stdin is not None:
+        proc.stdin.close()
     proc.stdout.close()
     if proc.returncode not in acceptable_return_codes:
         import exceptions
