@@ -20,6 +20,7 @@ TODO: Trap stderr output.
 """
 
 from common.misc import runcmd
+from common.tidy import tidy
 import os.path
 
 import sys
@@ -32,10 +33,7 @@ def html2text(html, html2textrc=os.path.expanduser("~/dev/common-scripts/html2te
     If veryquiet, all errors and warnings from tidy are written to /dev/null.
     """
     assert os.path.exists(html2textrc)
-    tidyoptions = ""
-    if forceoutput: tidyoptions += " --force-output yes"
-    if veryquiet: tidyoptions += " -f /dev/null"
-    tidyhtml = runcmd("tidy -quiet %s" % tidyoptions, input=html.encode("utf-8"), acceptable_return_codes=[0,1])
+    tidyhtml = tidy(text, xml=False, forceoutput=forceoutput, veryquiet=veryquiet)
     text = runcmd("html2text -nobs -style pretty  -rcfile %s" % html2textrc, input=tidyhtml)
     return text
 
