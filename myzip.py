@@ -32,7 +32,7 @@ def _process_help(zipf, filenames):
     filenames in the parameter is a list of the zip files that were extracted to get to this zipf.
     filenames in the yield is a list of the zip files and final file that were extracted to get to this StringIO.
     """
-    print >> sys.stderr, "Processing", filenames
+    logging.debug("Processing %s" % filenames)
     for newf in zipf.namelist():
         if newf[-4:] == ".zip" or newf[-4:] == ".ZIP":
             logging.debug("Opening %s in %s" % (newf, filenames))
