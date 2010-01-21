@@ -10,7 +10,7 @@ def findone(tree, path):
     """
     t = tree.findall(path)
     if len(t) != 1:
-        print >> sys.stderr, "ERROR: len(t) = %d when searching for path %s in %s" % (len(t), path, self._root)
+        print >> sys.stderr, "ERROR: len(t) = %d when searching for path %s in %s with children %s" % (len(t), path, tree, tree.getchildren())
     assert len(t) == 1
     return t[0]
 
@@ -28,6 +28,9 @@ def allsubtext(tag, avoid=None):
     tail = tag.tail
     if tail == None: tail = ""
     return tag.text + children + tail
+
+def findallsubtext(tree, path):
+    return allsubtext(findone(tree, path))
 
 if __name__ == "__main__":
     import xml.etree.cElementTree as ET
