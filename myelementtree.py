@@ -25,9 +25,11 @@ def allsubtext(tag, avoid=None):
     children = ""
     for t in tag.getchildren():
         children += allsubtext(t, avoid=avoid)
+    text = tag.text
+    if text == None: text = ""
     tail = tag.tail
     if tail == None: tail = ""
-    return tag.text + children + tail
+    return text + children + tail
 
 def findallsubtext(tree, path):
     return allsubtext(findone(tree, path))
