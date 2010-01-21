@@ -4,14 +4,17 @@ ElementTree helper functions.
 
 import sys
 
-def findone(tree, path):
+def findone(tree, path, debug=False):
     """
     Find an XML path, which must be unique, and return it.
     """
     t = tree.findall(path)
     if len(t) != 1:
-        print >> sys.stderr, "ERROR: len(t) = %d when searching for path %s in %s with children %s" % (len(t), path, tree, tree.getchildren())
-    assert len(t) == 1
+        if debug:
+            print >> sys.stderr, "ERROR: len(t) = %d when searching for path %s in %s with children %s" % (len(t), path, tree, tree.getchildren())
+            return None
+        else:
+            assert 0
     return t[0]
 
 def allsubtext(tag, avoid=None):
