@@ -37,7 +37,48 @@ def allsubtext(tag, avoid=None):
 def findallsubtext(tree, path, debug=False):
     return allsubtext(findone(tree, path, debug=debug))
 
+import re
+xmlprocre = re.compile("(\s*<[\?\!])")
+def add_toplevel_tag(string):
+    """
+    After all the XML processing instructions, add an enclosing top-level <DOC> tag, and return it.
+    e.g.
+        <?xml version="1.0" encoding="UTF-8"?> <!DOCTYPE FOO BAR "foo.dtd" [ <!ENTITY ...> <!ENTITY ...> <!ENTITY ...> ]> <ARTICLE> ...
+         </ARTICLE> <ARTICLE> ... </ARTICLE> <ARTICLE> ... </ARTICLE> <ARTICLE> ... </ARTICLE>
+      =>
+        <?xml version="1.0" encoding="UTF-8"?> <!DOCTYPE FOO BAR "foo.dtd" [ <!ENTITY ...> <!ENTITY ...> <!ENTITY ...> ]><DOC> <ARTICLE> ...
+         </ARTICLE> <ARTICLE> ... </ARTICLE> <ARTICLE> ... </ARTICLE> <ARTICLE> ... </ARTICLE></DOC>
+    """
+    def _advance_proc(string, idx):
+        # If possible, advance over whitespace and one processing
+        # instruction starting at string index idx, and return its index.
+        # If not possible, return None
+        # Find the beginning of the processing instruction
+        m = xmlprocre.match(string[idx:])
+        if m is None: return None
+        #print "Group", m.group(1)
+        idx = idx + len(m.group(1))
+        #print "Remain", string[idx:]
+
+        # Find closing > bracket
+        bracketdebt = 1
+        while bracketdebt > 0:
+            if string[idx] == "<": bracketdebt += 1
+            elif string[idx] == ">": bracketdebt -= 1
+            idx += 1
+        print "Remain", string[idx:]
+        return idx
+    loc = 0
+    while 1:
+        # Advance one processing instruction
+        newloc = _advance_proc(string, loc)
+        if newloc is None: break
+        else: loc = newloc
+    return string[:loc] + "<DOC>" + string[loc:] + "</DOC>"
+
 if __name__ == "__main__":
     import xml.etree.cElementTree as ET
     print allsubtext(ET.fromstring("<doc><p>1 <b>2<i>3</i> 4</b> 5 <b>6</b></p></doc>").findall("./p")[0])
     print allsubtext(ET.fromstring("<doc><p>1 <b>2<i>3</i> <p>4</p></b> 5 <b>6</b></p></doc>").findall("./p")[0])
+    print add_toplevel_tag('<?xml version="1.0" encoding="UTF-8"?> <!DOCTYPE FOO BAR "foo.dtd" [ <!ENTITY ...> <!ENTITY ...> <!ENTITY ...> ]> <ARTICLE> ... </ARTICLE> <ARTICLE> ... </ARTICLE> <ARTICLE> ... </ARTICLE> <ARTICLE> ... </ARTICLE>')
+
