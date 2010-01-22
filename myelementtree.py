@@ -66,7 +66,7 @@ def add_toplevel_tag(string):
             if string[idx] == "<": bracketdebt += 1
             elif string[idx] == ">": bracketdebt -= 1
             idx += 1
-        print "Remain", string[idx:]
+        #print "Remain", string[idx:]
         return idx
     loc = 0
     while 1:
