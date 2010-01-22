@@ -34,8 +34,8 @@ def allsubtext(tag, avoid=None):
     if tail == None: tail = ""
     return text + children + tail
 
-def findallsubtext(tree, path):
-    return allsubtext(findone(tree, path))
+def findallsubtext(tree, path, debug=False):
+    return allsubtext(findone(tree, path, debug=debug))
 
 if __name__ == "__main__":
     import xml.etree.cElementTree as ET
