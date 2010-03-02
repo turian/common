@@ -12,7 +12,6 @@ class KeyError(Exception):
     def __init__(self, key):
         self.key = key
 
-_unknown_key = "*UNKNOWN*"
 class IDmap:
     """
     Map from an objection to a unique numerial ID.
@@ -20,15 +19,16 @@ class IDmap:
     If allow_unknown=True (False by default), then all unknown words get mapped
     to one OOV token id.
     """
-    def __init__(self, keys, allow_unknown=False):
+    def __init__(self, keys, allow_unknown=False, unknown_key="*UNKNOWN*"):
+        self._unknown_key = unknown_key
         self.allow_unknown = allow_unknown
         self.map = {}
         self.reverse_map = []
         if self.allow_unknown:
-            assert _unknown_key not in keys
-            self.map[_unknown_key] = len(self.reverse_map)
-            self.reverse_map.append(_unknown_key)
-            assert self.exists(_unknown_key) and self.key(self.id(_unknown_key)) == _unknown_key
+            assert self._unknown_key not in keys
+            self.map[self._unknown_key] = len(self.reverse_map)
+            self.reverse_map.append(self._unknown_key)
+            assert self.exists(self._unknown_key) and self.key(self.id(self._unknown_key)) == self._unknown_key
         for key in keys:
             self.map[key] = len(self.reverse_map)
             self.reverse_map.append(key)
@@ -43,7 +43,7 @@ class IDmap:
         Get the ID for this string.
         """
         if key in self.map: return self.map[key]
-        if self.allow_unknown: return self.map[_unknown_key]
+        if self.allow_unknown: return self.map[self._unknown_key]
         raise KeyError(key)
 
     def key(self, id):
