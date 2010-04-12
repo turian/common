@@ -33,7 +33,7 @@ def html2text(html, html2textrc=os.path.expanduser("~/dev/common-scripts/html2te
     If veryquiet, all errors and warnings from tidy are written to /dev/null.
     """
     assert os.path.exists(html2textrc)
-    tidyhtml = tidy(text, xml=False, forceoutput=forceoutput, veryquiet=veryquiet)
+    tidyhtml = tidy(html, xml=False, forceoutput=forceoutput, veryquiet=veryquiet)
     text = runcmd("html2text -nobs -style pretty  -rcfile %s" % html2textrc, input=tidyhtml)
     return text
 

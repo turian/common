@@ -7,13 +7,16 @@ NOTE:
     splitta to get it to work.
     You need to add parameter files_already_opened to sbd.get_data.
 
-    * I recommend the SVN HEAD version of splitta.
-    Models in 1.0.2 are stored as pickle files, which make it very
-    difficult to load the models from outside the original splitta code.
+    * I use the 1.0.3 version of splitta.
+
+    * Previous to the 1.0.3 release, I recommend SVN_HEAD, writing:
+    "Models in 1.0.2 are stored as pickle files, which make it very
+    difficult to load the models from outside the original splitta code."
 
     * I chdir into the splitta dir and the chdir to the original working
     directory. This is vestigial code from my 1.02 API and might not
-    be necessary anymore.
+    be necessary anymore. BUG: It is also going to leave you in the
+    wrong directory if there is an exception.
 
     * splitta_dir is added to the sys.path automatically, which is
     probably bad behavior.
@@ -37,7 +40,7 @@ import StringIO
 
 models = {}
 
-def tokenize(text, tokenize=False, splitta_dir="/home/joseph/utils/src/splitta.svn/", model_path="model_svm", verbose=False):
+def tokenize(text, tokenize=False, splitta_dir="/u/turian/utils/src/splitta-1.03/", model_path="model_svm", verbose=False):
     assert os.path.isdir(splitta_dir)
     if splitta_dir not in sys.path:
         sys.path.append(splitta_dir)
@@ -58,7 +61,7 @@ def tokenize(text, tokenize=False, splitta_dir="/home/joseph/utils/src/splitta.s
         models[model_path] = sbd.load_sbd_model(model_path, svm)
     model = models[model_path]
 
-    test = sbd.get_data(StringIO.StringIO(text), tokenize=True, files_already_opened=True)
+    test = sbd.get_data([StringIO.StringIO(text)], tokenize=True, files_already_opened=True)
     test.featurize(model, verbose=verbose)
     model.classify(test, verbose=verbose)
     output = StringIO.StringIO()
