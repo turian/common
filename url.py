@@ -7,7 +7,7 @@ httplib.HTTPConnection.debuglevel = 1
 useragent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)'
 # see these: http://techpatterns.com/forums/about304.html
 
-def fetch(url, decode=False):
+def fetch(url, decode=False, timeout=15):
     """
     Return the text of a particular URL
     If decode, then attempt to decode the text.
@@ -16,7 +16,7 @@ def fetch(url, decode=False):
     request.get_full_url()
     request.add_header('User-Agent', useragent)
     opener = urllib2.build_opener()
-    response = opener.open(request)
+    response = opener.open(request, timeout=timeout)
     if decode:
         return decode_response(response)
     else:
