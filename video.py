@@ -18,7 +18,7 @@ def grab_frame(filename, framenumber, FPS=29.97):
     """
     tmp = tempfile.NamedTemporaryFile(suffix=".png")
     framesec = 1. * framenumber / FPS
-    cmd = "ffmpeg -i %s -vcodec png -vframes 1 -an -ss %f -f rawvideo %s" % (filename, framesec, tmp.name)
+    cmd = "ffmpeg -i %s -y -vcodec png -vframes 1 -an -ss %f -f rawvideo %s" % (filename, framesec, tmp.name)
     print >> sys.stderr, cmd
     runcmd(cmd)
     im = Image.open(tmp.name)
