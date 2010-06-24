@@ -28,7 +28,7 @@ def deterministicrandom(x):
     int (32-bit), which is what we expect.
     """
 
-    unsigned_long_value = murmur.string_hash(`x`)
+    unsigned_long_value = unsigned_long_hash(x)
 
 #   import types
 #   print type(long_value)
@@ -39,8 +39,18 @@ def deterministicrandom(x):
     r = 1.0 * unsigned_long_value / MAX_UNSIGNED_LONG
     return r
 
+def unsigned_long_hash(x):
+    return murmur.string_hash(`x`)
+
 if __name__ == "__main__":
     array = [deterministicrandom(i) for i in range(1000)]
     import numpy
-    print array
     print "mean (should be 0.5) = ", numpy.mean(array)
+
+    import sys, os
+    import struct
+    print >> sys.stderr, "Writing 500000 bytes of random output to randomoutput.bin"
+    f = open("randomoutput.bin", "wb")
+    for i in range(1250000):
+        f.write(struct.pack("L", unsigned_long_hash(i)))
+    os.system("ent randomoutput.bin")
