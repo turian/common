@@ -20,15 +20,15 @@ class IDmap:
     to one OOV token id.
     """
     def __init__(self, keys, allow_unknown=False, unknown_key="*UNKNOWN*"):
-        self._unknown_key = unknown_key
+        self.unknown_key = unknown_key
         self.allow_unknown = allow_unknown
         self.map = {}
         self.reverse_map = []
         if self.allow_unknown:
-            assert self._unknown_key not in keys
-            self.map[self._unknown_key] = len(self.reverse_map)
-            self.reverse_map.append(self._unknown_key)
-            assert self.exists(self._unknown_key) and self.key(self.id(self._unknown_key)) == self._unknown_key
+            assert self.unknown_key not in keys
+            self.map[self.unknown_key] = len(self.reverse_map)
+            self.reverse_map.append(self.unknown_key)
+            assert self.exists(self.unknown_key) and self.key(self.id(self.unknown_key)) == self.unknown_key
         for key in keys:
             self.map[key] = len(self.reverse_map)
             self.reverse_map.append(key)
@@ -43,7 +43,10 @@ class IDmap:
         Get the ID for this string.
         """
         if key in self.map: return self.map[key]
-        if self.allow_unknown: return self.map[self._unknown_key]
+        if self.allow_unknown:
+#            import sys
+#            print >> sys.stderr, self.__dict__.keys() # REMOVEME
+            return self.map[self.unknown_key]
         raise KeyError(key)
 
     def key(self, id):
