@@ -55,12 +55,10 @@ if __name__ == "__main__":
 
     import os
     import struct
-    # Make sure that packing to a struct of type I (unsigned int) is
+    # Make sure that packing to a struct of type L (standard unsigned long) is
     # 4 bytes, which is the length of the murmurhash output. (Actually,
-    # we don't sanity check that.) The Python documentation for struct
-    # erroneously saying that L (unsigned long) is 4 bytes. In fact,
-    # it is 8 (http://bugs.python.org/issue1789)
-    assert len(struct.unpack("cccc", struct.pack("I", hash_value(0)))) == HASH_BYTES
+    # we don't sanity check murmurhash length :( .)
+    assert len(struct.unpack("cccc", struct.pack("=L", hash_value(0)))) == HASH_BYTES
 
     if not options.stream:
         array = [deterministicrandom(i) for i in range(1000)]
@@ -70,14 +68,12 @@ if __name__ == "__main__":
         print >> sys.stderr, "Writing 500000 bytes of random output to randomoutput.bin"
         f = open("randomoutput.bin", "wb")
         for i in range(1250000):
-            f.write(struct.pack("I", hash_value(i)))
-#            f.write(struct.pack("L", hash_value(i)))
+            f.write(struct.pack("=L", hash_value(i)))
         os.system("ent randomoutput.bin")
     else:
         i = 0
         import common.stats
         while 1:
-            sys.stdout.write(struct.pack("I", hash_value(i)))
-#            sys.stdout.write(struct.pack("L", hash_value(i)))
+            sys.stdout.write(struct.pack("=L", hash_value(i)))
             i += 1
 #            if i % 1000000 == 0: print >> sys.stderr, i, common.stats.stats()
