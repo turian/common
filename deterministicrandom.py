@@ -17,6 +17,7 @@ WARNING:
 
 TODO:
     * Make sure that we get a 4-byte value from murmurhash!!!
+    * Construct float value from 64-bits, not 32-bits.
 """
 
 import sys
@@ -30,6 +31,8 @@ def deterministicrandom(x):
     """
     Convert x (any Python value) to a deterministic uniform random number
     in [0, 1), with 32-bits of precision.
+
+    TODO: Construct float value from 64-bits, not 32-bits.
     """
 
     i = hash_value(x)
