@@ -70,6 +70,9 @@ def hash_value(x):
     assert i >= 0 and i < MAX_HASH_VALUE
     return i
 
+assert [hash_value(i) for i in range(10)] == [1111412596, 1228156847, 772897149, 2292183779, 873905602, 1598865363, 1503201697, 3657602018, 194571672, 2418971295]
+print >> sys.stderr, "Simple sanity check passed"
+
 if __name__ == "__main__":
     from optparse import OptionParser
     parser = OptionParser()
