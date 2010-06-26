@@ -19,11 +19,11 @@ WARNING:
     randomness of this stream, use the following command:
         ./deterministicrandom.py -s | dieharder -g 200 -a
 
-    * We might not have deterministic results across machine architectures
+    * We might not have identical results across machine architectures
     and endianess. We haven't tested that the hash function is truly
-    deterministic. Also, converting the object to a string before
-    hashing it might give different results depending upon the machine
-    and Python version.
+    identical. Also, converting the object to a string before hashing
+    it might give different results depending upon the machine and
+    Python version.
 
 TODO:
     * Make sure that we get a 4-byte value from murmurhash!!!
