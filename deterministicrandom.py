@@ -4,6 +4,14 @@
 Deterministic uniform random numbers, with 32-bits of precision.
 We provide random access given a particular key.
 
+NOTE:
+    * We use pyhash, a Python-wrapped C implementation of murmurhash 2. We
+    use murmur2_neutral_32, which is supposed to produce identical results
+    regardless of block alignment and machine-endianess, albeit slower
+    that the other murmurhash 2 implementations.
+    Use the SVN version of pyhash:
+        http://code.google.com/p/pyfasthash/source/checkout
+
 WARNING:
     * This is random access to an RNG. Instead of using a pseudo-RNG
     as such (which might be slow for random access), we use hashing to
@@ -11,9 +19,11 @@ WARNING:
     randomness of this stream, use the following command:
         ./deterministicrandom.py -s | dieharder -g 200 -a
 
-    * We use Murmur, a Python-wrapped C implementation of murmurhash. This
-    is probably not the latest or fastest implementation of
-    MurmurHash 2.0.
+    * We might not have deterministic results across machine architectures
+    and endianess. We haven't tested that the hash function is truly
+    deterministic. Also, converting the object to a string before
+    hashing it might give different results depending upon the machine
+    and Python version.
 
 TODO:
     * Make sure that we get a 4-byte value from murmurhash!!!
@@ -21,11 +31,13 @@ TODO:
 """
 
 import sys
-import murmur
+import pyhash
 
 # We expect the hash to be 4 bytes long
 HASH_BYTES = 4
 MAX_HASH_VALUE = 2**(8*HASH_BYTES)
+
+_hasher = pyhash.murmur2_neutral_32()
 
 def deterministicrandom(x):
     """
@@ -44,7 +56,7 @@ def hash_value(x):
     """
     TODO: Make sure that we get a 4-byte value!!!
     """
-    i = murmur.string_hash(`x`)
+    i = _hasher(`x`)
 #    assert sys.sizeof(i) == HASH_BYTES
     assert i >= 0 and i < MAX_HASH_VALUE
     return i
