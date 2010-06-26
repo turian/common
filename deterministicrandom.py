@@ -37,15 +37,16 @@ import pyhash
 HASH_BYTES = 4
 MAX_HASH_VALUE = 2**(8*HASH_BYTES)
 
-# If murmur2_neutral_32 and murmur2_32 give identical results for 1000
-# numbers, then we'll assume they are interchangeable, and use murmur2_32
-# which is faster.
-if [pyhash.murmur2_32()(`i`) for i in range(1000)] == [pyhash.murmur2_neutral_32()(`i`) for i in range(1000)]:
-    print >> sys.stderr, "Using pyhash.murmur2_32() optimization, since pyhash.murmur2_32 == pyhash.murmur2_neutral_32"
-    _hasher = pyhash.murmur2_32()
-else:
-    print >> sys.stderr, "UH-OH. Using pyhash.murmur2_neutral_32() to be safe, since pyhash.murmur2_32 != pyhash.murmur2_neutral_32"
-    _hasher = pyhash.murmur2_neutral_32()
+_hasher = pyhash.murmur2_neutral_32()
+## If murmur2_neutral_32 and murmur2_32 give identical results for 1000
+## numbers, then we'll assume they are interchangeable, and use murmur2_32
+## which is faster.
+#if [pyhash.murmur2_32()(`i`) for i in range(1000)] == [pyhash.murmur2_neutral_32()(`i`) for i in range(1000)]:
+#    print >> sys.stderr, "Using pyhash.murmur2_32() optimization, since pyhash.murmur2_32 == pyhash.murmur2_neutral_32"
+#    _hasher = pyhash.murmur2_32()
+#else:
+#    print >> sys.stderr, "UH-OH. Using pyhash.murmur2_neutral_32() to be safe, since pyhash.murmur2_32 != pyhash.murmur2_neutral_32"
+#    _hasher = pyhash.murmur2_neutral_32()
 
 def deterministicrandom(x):
     """
