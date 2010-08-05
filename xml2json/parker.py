@@ -56,7 +56,10 @@ def readxmlfile(file):
     """
     Read an XML file and convert it to an object in the Parker convention.
     """
-    import xml.etree.cElementTree as ET
+    try:
+        import xml.etree.cElementTree as ET
+    except:
+        import cElementTree as ET
     tree = ET.parse(sys.stdin)
     root = tree.getroot()
     return {root.tag: _converthelp(root) }
@@ -72,4 +75,4 @@ def convertxmlstring(str):
 if __name__ == "__main__":
     import sys
     import simplejson as json
-    json.dump(readxml(sys.stdin), sys.stdout, indent=4)
+    json.dump(readxmlfile(sys.stdin), sys.stdout, indent=4)
