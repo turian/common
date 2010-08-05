@@ -33,7 +33,7 @@ def double_epsilon_multiplicative_eq(a, b, epsilon=DEFAULT_SANITY_CHECK_EPSILON)
     if a > b: d = a / b
     else: d = b / a
     assert d >= 1
-    return True if d <= 1 + SANITY_CHECK_EPSILON else False
+    return d <= 1 + SANITY_CHECK_EPSILON
 
 def double_epsilon_additive_eq(a, b):
     """

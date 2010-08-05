@@ -38,7 +38,8 @@ def sign(i, assertions=True):
     else:
         if i == 0: return 0
 
-    return +1 if i > 0 else -1
+    if i > 0: return +1
+    else: return -1
 
 def unique_elements_list_intersection(list1,list2):
     """
