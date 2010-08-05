@@ -37,16 +37,16 @@ def db(DATABASE, HOSTNAME=None, PORT=None):
     assert DATABASE in _db
     return _db[DATABASE]
 
-def findall(DATABASE, matchfn, matchfn_description="match", title="", logevery=1000, timeout=False):
+def findall(collection, matchfn, matchfn_description="match", title="", logevery=1000, timeout=False):
     """
-    Iterate over the document collection, and yield all documents for which matchfn(doc) is true.
+    Iterate over a document collection, and yield all documents for which matchfn(doc) is true.
     Periodically output statistics about how many match, using matchfn_description (a plural verb, e.g. "match")
     """
     matchcnt = MovingAverage()
-    from collections import defaultdict
-    for i, doc in enumerate(collection(DATABASE).find(timeout=timeout)):
-        if i % logevery == 0 and i > 0 and i <= collection(DATABASE).count():
-            logging.info("%s Done with %s of documents, %s of documents %s" % (title, percent(i, collection(DATABASE).count()), matchcnt, matchfn_description))
+    from common.defaultdict import defaultdict
+    for i, doc in enumerate(collection.find(timeout=timeout)):
+        if i % logevery == 0 and i > 0 and i <= collection.count():
+            logging.info("%s Done with %s of documents, %s of documents %s" % (title, percent(i, collection.count()), matchcnt, matchfn_description))
             logging.info(stats())
 
         if not matchfn(doc):
