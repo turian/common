@@ -21,16 +21,18 @@ def collection(DATABASE, name="documents"):
     if name not in _collection[DATABASE]: _collection[DATABASE][name] = db(DATABASE)[name]
     return _collection[DATABASE][name]
 
-def db(DATABASE):
+def db(DATABASE, HOSTNAME=None, PORT=None):
     global _connection, _db
     if DATABASE not in _db:
         # Open the collection, since it is not yet open.
-        import common.hyperparameters
-        HYPERPARAMETERS = common.hyperparameters.read("pylucene")
     
         from pymongo.connection import Connection
         # Each of these are equivalent, the first two make use of default arguments.
-        _connection = Connection(HYPERPARAMETERS["mongodb hostname"], HYPERPARAMETERS["mongodb port"])
+        if HOSTNAME is None:
+            assert PORT is None
+            _connection = Connection()
+        else:
+            _connection = Connection(HOSTNAME, PORT)
         _db[DATABASE] = _connection[DATABASE]
     assert DATABASE in _db
     return _db[DATABASE]

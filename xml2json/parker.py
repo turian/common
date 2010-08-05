@@ -60,7 +60,7 @@ def readxmlfile(file):
         import xml.etree.cElementTree as ET
     except:
         import cElementTree as ET
-    tree = ET.parse(sys.stdin)
+    tree = ET.parse(file)
     root = tree.getroot()
     return {root.tag: _converthelp(root) }
 
