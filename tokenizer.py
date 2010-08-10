@@ -4,29 +4,10 @@ Tokenize a text into one-sentence-per-line (a list of sentences) using splitta.
 
 NOTE:
     * Unfortunately, there need to be some changes made to
-    splitta to get it to work. See Splitta issue #2:
+    splitta to get it to work. See Splitta issue #2 and #3 for patches
+    you should apply:
         http://code.google.com/p/splitta/issues/detail?id=2
-    You need to add parameter files_already_opened to sbd.get_data. Use the following diff:
-===========================
-93c93
-< def get_data(files, expect_labels=True, tokenize=False, verbose=False, files_already_opened=False):
----
-> def get_data(files, expect_labels=True, tokenize=False, verbose=False):
-108,111c108
-<         if files_already_opened:
-<             fh = file
-<         else:
-<             fh = open(file)
----
->         fh = open(file)
-151,154c148
-<         if files_already_opened:
-<             pass
-<         else:
-<             fh.close()
----
->         fh.close()
-===========================
+        http://code.google.com/p/splitta/issues/detail?id=3
 
     * I use the 1.0.3 version of splitta.
 
@@ -61,7 +42,7 @@ import StringIO
 
 models = {}
 
-def tokenize(text, tokenize=False, splitta_dir="/u/turian/utils/src/splitta-1.03/", model_path="model_svm", verbose=False):
+def tokenize(text, tokenize=False, splitta_dir="/home/turian/utils/src/splitta-1.03/", model_path="model_svm", verbose=False):
     assert os.path.isdir(splitta_dir)
     if splitta_dir not in sys.path:
         sys.path.append(splitta_dir)
