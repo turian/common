@@ -13,7 +13,7 @@ However, this protecton is not yet offered.
 import sys, yaml
 
 _HYPERPARAMETERS = {}
-from collections import defaultdict
+from common.defaultdict import defaultdict
 _readcount = defaultdict(int)
 
 def read(suffix=None):
