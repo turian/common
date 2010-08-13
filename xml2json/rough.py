@@ -21,6 +21,8 @@ currentdoc = {}
 curtag = ""
 curval = ""
 
+first = True
+
 print "["
 for l in sys.stdin:
     if opentag.search(l):
@@ -39,9 +41,12 @@ for l in sys.stdin:
             pass
         elif tag == DOCLABEL:
             if len(currentdoc) > 0:
+                if first:
+                    first = False
+                else:
+                    print ","
                 docs.append(currentdoc)
                 dump(currentdoc, sys.stdout, indent=4)
-                print ","
             currentdoc = {}
         else:
             currentdoc[curtag] = string.strip(curval)
