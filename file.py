@@ -1,4 +1,9 @@
-import gzip, bz2
+import gzip
+try:
+    import bz2
+except:
+    import sys
+    print >> sys.stderr, "COULD NOT IMPORT bz2 !"
 import os, os.path, sys
 
 def myopen(filename, mode="r", bufsize=-1):
