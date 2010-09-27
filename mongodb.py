@@ -12,13 +12,13 @@ _connection = None
 _collection = {}
 _db = {}
 
-def collection(DATABASE, name="documents"):
+def collection(DATABASE, name="documents", HOSTNAME=None, PORT=None):
     """
     Return a database collection (MongoDB Collection).
     """
     global _collection
     if DATABASE not in _collection: _collection[DATABASE] = {}
-    if name not in _collection[DATABASE]: _collection[DATABASE][name] = db(DATABASE)[name]
+    if name not in _collection[DATABASE]: _collection[DATABASE][name] = db(DATABASE, HOSTNAME=HOSTNAME, PORT=PORT)[name]
     return _collection[DATABASE][name]
 
 def db(DATABASE, HOSTNAME=None, PORT=None):
