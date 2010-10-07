@@ -37,7 +37,7 @@ def html2text(html, html2textrc=os.path.expanduser("~/dev/common-scripts/html2te
     text = runcmd("html2text -nobs -style pretty  -rcfile %s" % html2textrc, input=tidyhtml)
     return text
 
-def batch_nclean(htmls, strip_html_output=True, ncleaner=os.path.expanduser("~/utils/bin/ncleaner")):
+def batch_nclean(htmls, strip_html_output=True, ncleaner=os.path.join(os.environ["UTILS"], "bin/ncleaner")):
     """
     For a list of HTML byte strings, run ncleaner and return a list.
         NCleaner = http://webascorpus.sourceforge.net/, converts HTML to text and removes boilerplate.
@@ -47,6 +47,8 @@ def batch_nclean(htmls, strip_html_output=True, ncleaner=os.path.expanduser("~/u
     indir = tempfile.mkdtemp()
     outdir = tempfile.mkdtemp()
     txts = None
+
+    assert os.path.exists(ncleaner)
 
     htmlre = re.compile("^\s*<[^<>]*>\s*", re.MULTILINE)
     try:

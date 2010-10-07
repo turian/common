@@ -26,6 +26,7 @@ first = True
 print "["
 for l in sys.stdin:
     if opentag.search(l):
+#        print "OPEN", l
         m = opentag.search(l)
         tag = m.group(1)
         if tag == OUTERLABEL:
@@ -35,6 +36,7 @@ for l in sys.stdin:
         else:
             curtag = tag
     elif closetag.search(l):
+#        print "CLOSE", l
         m = closetag.search(l)
         tag = m.group(1)
         if tag == OUTERLABEL:
