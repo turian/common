@@ -3,13 +3,15 @@
 Tokenize a text into one-sentence-per-line (a list of sentences) using splitta.
 
 NOTE:
-    * Unfortunately, there need to be some changes made to
-    splitta to get it to work. See Splitta issue #2 and #3 for patches
-    you should apply:
+    * I use the SVN r20 version of splitta. Previously, I used 1.0.3,
+    but that required the subsequent patches.
+
+    * If you have splitta 1.0.3 or splitta SVN < r20, there need to be
+    some changes made to splitta to get it to work. See Splitta issue
+    #2 and #3 for patches you should apply:
+
         http://code.google.com/p/splitta/issues/detail?id=2
         http://code.google.com/p/splitta/issues/detail?id=3
-
-    * I use the 1.0.3 version of splitta.
 
     * Previous to the 1.0.3 release, I recommend SVN_HEAD, writing:
     "Models in 1.0.2 are stored as pickle files, which make it very
@@ -42,7 +44,7 @@ import StringIO
 
 models = {}
 
-def tokenize(text, tokenize=False, splitta_dir="/home/turian/utils/src/splitta-1.03/", model_path="model_svm", verbose=False):
+def tokenize(text, tokenize=False, splitta_dir=os.path.join(os.environ["UTILS"], "src/splitta.svn/"), model_path="model_svm", verbose=False):
     assert os.path.isdir(splitta_dir)
     if splitta_dir not in sys.path:
         sys.path.append(splitta_dir)
