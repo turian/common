@@ -37,7 +37,7 @@ def _converthelp(tree):
         else:
             return tree.text
     else:
-        assert wsre.match(tree.text)
+        assert tree.text is None or wsre.match(tree.text)
         cnames = {}
         for c in children: cnames[c.tag] = 1
         assert len(cnames) == 1 or len(cnames) == len(children)
