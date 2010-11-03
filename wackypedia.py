@@ -28,7 +28,7 @@ def wackydocs_in_file(fil):
     sentence = []
     for l in f:
         if l[:5] == "<text":
-        <text id="wikipedia:Anarchism">
+#        <text id="wikipedia:Anarchism">
             doc = []
         elif l[:6] == "</text":
             yield doc

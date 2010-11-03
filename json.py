@@ -15,11 +15,11 @@ def loadfile(filename):
     Load JSON from a filename.
     """
     return load(myopen(filename))
-def dumpfile(object, filename):
+def dumpfile(object, filename, **kwargs):
     """
     Dump JSON to a filename.
     """
-    return dump(object, myopen(filename, "wb"))
+    return dump(object, myopen(filename, "wb"), **kwargs)
 
 try:
     import jsonlib
