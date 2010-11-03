@@ -27,6 +27,7 @@ def wackydocs_in_file(fil):
     doc = []
     sentence = []
     for l in f:
+        l = l.decode('utf-8')
         if l[:5] == "<text":
 #        <text id="wikipedia:Anarchism">
             doc = []
