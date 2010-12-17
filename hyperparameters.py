@@ -10,7 +10,7 @@ However, this protecton is not yet offered.
 @todo: Maybe ensure that script locations are executable.
 """
 
-import sys, yaml
+import sys, myyaml
 
 _HYPERPARAMETERS = {}
 from common.defaultdict import defaultdict
@@ -35,7 +35,7 @@ def read(suffix=None):
     if suffix: f = "hyperparameters.%s.yaml" % suffix
     else: f = "hyperparameters.yaml" % suffix
     __file = common.file.ascend_find(f)
-    h = yaml.load(open(__file).read())
+    h = myyaml.load(open(__file).read())
     if os.path.realpath(__file) != __file:
         print >> sys.stderr, "NOTE: os.path.realpath(%s) = %s" % (__file, os.path.realpath(__file))
     h["basedir"] = os.path.dirname(os.path.realpath(__file))
@@ -64,7 +64,7 @@ def read(suffix=None):
         del h["work locations"]
     
 #    print >> sys.stderr, "# BEGIN %s HYPERPARAMETERS" % suffix
-#    print >> sys.stderr, yaml.dump({suffix: h}),
+#    print >> sys.stderr, myyaml.dump({suffix: h}),
 #    print >> sys.stderr, "# END %s HYPERPARAMETERS" % suffix
 
     _HYPERPARAMETERS[suffix] = h
@@ -78,7 +78,7 @@ def set(yamlparams, suffix=None):
     global _HYPERPARAMETERS
     print >> sys.stderr, "Setting hyperparameters for suffix", suffix
     assert suffix not in _HYPERPARAMETERS
-    params = yaml.load(yamlparams)
+    params = myyaml.load(yamlparams)
 
     assert len(params) == 1     # WHY IS THIS NECESSARY?
     params = params[0]
