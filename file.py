@@ -1,3 +1,4 @@
+import os.path
 import gzip
 try:
     import bz2
@@ -10,6 +11,7 @@ def myopen(filename, mode="r", bufsize=-1):
     """
     open(), detecting .gz and .bz2 file suffixes
     """
+    filename = os.path.expanduser(filename)
     if filename[-3:] == ".gz":
         if mode == "r" or mode == "rt": mode = "rb"
         elif mode == "w" or mode == "wt": mode = "wb"
