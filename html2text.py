@@ -73,6 +73,22 @@ def batch_nclean(htmls, strip_html_output=True, ncleaner=os.path.join(os.environ
     shutil.rmtree(outdir, ignore_errors=False, onerror=lambda function, path, excinfo: sys.stderr.write("Could not shutil.rmtree, function=%s, path=%s, excinfo=%s\n" % function, path, excinfo))
     return txts
 
+def boilerpipe_url2text(url):
+    """
+    Use Kohlschuetter Search Intelligence's boilerpipe boilerplate stripper.
+    """
+    import urllib,urllib2
+    newurl = "http://boilerpipe-web.appspot.com/extract?url=%s+&extractor=ArticleExtractor&output=text" % urllib.quote_plus(url)
+#    print newurl
+    f = urllib2.urlopen(newurl)
+    data = f.read()
+    f.close()
+    return data
+
+#http://boilerpipe-web.appspot.com/extract?url=http%3A%2F%2Fnarrativebranding.wordpress.com%2F2010%2F08%2F18%2Fgone-fishin%2F+&extractor=ArticleExtractor&output=text
+    
+
 if __name__ == "__main__":
-    import sys
-    print html2text(sys.stdin.read())
+#    import sys
+#    print html2text(sys.stdin.read())
+    print boilerpipe_url2text("http://www.bianet.org/english/freedom-of-expression/122506-dairy-company-yorsan-advocates-for-internet-censorship")
