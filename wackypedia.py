@@ -13,7 +13,8 @@ import sys
 import string
 import re
 import os.path
-WACKYDIR = os.path.expanduser("~/data/wikipedia/wackypedia_en/")
+#WACKYDIR = os.path.expanduser("~/data/wikipedia/wackypedia_en/")
+WACKYDIR = os.path.expanduser("~/data/wikipedia/wackpedia-INCOMPLETE/")
 
 WACKYFILES = ["wackypedia_en%d.gz" % i for i in range(1, 4+1)]
 
@@ -35,12 +36,12 @@ def wackydocs_in_file(fil):
     doc = {}
     sentence = []
     for l in f:
-#        l = l.decode('utf-8')
+        l = l.decode('ISO-8859-2')
         if l[:5] == "<text":
             m = titlere.match(l)
             assert m
             doc = {}
-            doc["title"] = m.group(1).decode('utf-8')
+            doc["title"] = m.group(1)
             doc["sentences"] = []
         elif l[:6] == "</text":
             yield doc
@@ -52,7 +53,16 @@ def wackydocs_in_file(fil):
             (word, stem, a, b, c, d) = string.split(l)
             sentence.append(word)
 
+def load_into_mongodb(database="wackypedia_en", collection="wackypedia_en"):
+    import common.mongodb
+    collection = common.mongodb.collection()
+    for i, d in enumerate(wackydocs()):
+        d["_id"] = d["title"]
+        collection.insert(d)
+        print collection.count()
+
 if __name__ == "__main__":
+#    load_into_mongodb()
     for i, d in enumerate(wackydocs()):
         if i % 10 == 0: print i, common.json.dumps(d)
         if i > 100: break
