@@ -58,7 +58,10 @@ def load_into_mongodb(database="wackypedia_en", collection="wackypedia_en"):
     collection = common.mongodb.collection(DATABASE=database, name=collection)
     for i, d in enumerate(wackydocs()):
         d["_id"] = d["title"]
-        collection.insert(d)
+        try:
+            collection.insert(d)
+        except Exception, e:
+            print >> sys.stderr, "ERROR. Could not insert doc into mongodb: %s" % repr(d), type(e), e
         if (i+1) % 1000 == 0:
             print >> sys.stderr, "Extracted %d wackydocs, mongo collection has %d docs" % (i+1, collection.count())
             print >> sys.stderr, stats()
