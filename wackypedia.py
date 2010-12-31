@@ -13,8 +13,8 @@ import sys
 import string
 import re
 import os.path
-#WACKYDIR = os.path.expanduser("~/data/wikipedia/wackypedia_en/")
-WACKYDIR = os.path.expanduser("~/data/wikipedia/wackpedia-INCOMPLETE/")
+WACKYDIR = os.path.expanduser("~/data/wikipedia/wackypedia_en/")
+#WACKYDIR = os.path.expanduser("~/data/wikipedia/wackpedia-INCOMPLETE/")
 
 WACKYFILES = ["wackypedia_en%d.gz" % i for i in range(1, 4+1)]
 
@@ -55,15 +55,17 @@ def wackydocs_in_file(fil):
 
 def load_into_mongodb(database="wackypedia_en", collection="wackypedia_en"):
     import common.mongodb
-    collection = common.mongodb.collection()
+    collection = common.mongodb.collection(DATABASE=database, name=collection)
     for i, d in enumerate(wackydocs()):
         d["_id"] = d["title"]
         collection.insert(d)
-        print collection.count()
+        if (i+1) % 1000 == 0:
+            print >> sys.stderr, "Extracted %d wackydocs, mongo collection has %d docs" % (i+1, collection.count())
+            print >> sys.stderr, stats()
 
 if __name__ == "__main__":
-#    load_into_mongodb()
-    for i, d in enumerate(wackydocs()):
-        if i % 10 == 0: print i, common.json.dumps(d)
-        if i > 100: break
+    load_into_mongodb()
+#    for i, d in enumerate(wackydocs()):
+#        if i % 10 == 0: print i, common.json.dumps(d)
+##        if i > 100: break
 #        print d
