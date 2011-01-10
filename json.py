@@ -9,17 +9,27 @@ dumps = simplejson.dumps
 load = simplejson.load
 dump = simplejson.dump
 
+from common.stats import stats
 from common.file import myopen
-def loadfile(filename):
+
+import sys
+
+def loadfile(filename, verbose=False):
     """
     Load JSON from a filename.
     """
-    return load(myopen(filename))
-def dumpfile(object, filename, **kwargs):
+    if verbose: print >> sys.stderr, "common.json.loadfile(%s)...\n%s" % (repr(filename), stats())
+    object = load(myopen(filename))
+    if verbose: print >> sys.stderr, "...common.json.loadfile(%s)\n%s" % (repr(filename), stats())
+    return object
+def dumpfile(object, filename, verbose=False, **kwargs):
     """
     Dump JSON to a filename.
     """
-    return dump(object, myopen(filename, "wb"), **kwargs)
+    if verbose: print >> sys.stderr, "common.json.dumpfile(object, %s)...\n%s" % (repr(filename), stats())
+    r = dump(object, myopen(filename, "wb"), **kwargs)
+    if verbose: print >> sys.stderr, "...common.json.dumpfile(object, %s)\n%s" % (repr(filename), stats())
+    return r
 
 try:
     import jsonlib
