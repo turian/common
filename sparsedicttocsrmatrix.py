@@ -10,7 +10,7 @@ class SparseDictToCSRMatrix:
     def __init__(self):
         return
     def train(self, features):
-        print features
+#        print features
         keys = set()
         for f in features:
             keys.update(f.keys())
