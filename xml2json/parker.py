@@ -11,6 +11,8 @@ I wrote this package because xml2json-xlst
 (http://code.google.com/p/xml2json-xslt/) produces good output, but
 there are certain XML files it cannot grok.
 
+KEEPNONE determines whether we keep keys with no value (null in JSON) or not.
+
 Optional:
     If you want to run this script standalone and convert XML in sys.stdin
     to JSON on sys.stdout, you will need
@@ -21,13 +23,14 @@ Older requirement:
         installed by in the standard library of Python >= 2.5.
 
 @todo: Regular expressions to find floats
+@todo: KEEPNONE = command line param
 """
 
 import re
 intre = re.compile("^([\+\-])?[0-9]+$")
 wsre = re.compile("^\s*$")
 
-def _converthelp(tree):
+def _converthelp(tree, KEEPNONE):
     children = tree.getchildren()
     if len(children) == 0:
         if tree.text == None:
@@ -42,17 +45,19 @@ def _converthelp(tree):
         for c in children: cnames[c.tag] = 1
         assert len(cnames) == 1 or len(cnames) == len(children)
         if len(cnames) == 1 and len(children) > 1:
-            return [_converthelp(c) for c in children]
+            return [_converthelp(c, KEEPNONE) for c in children]
         else:
             v = {}
             for c in children:
-                v[c.tag] = _converthelp(c)
+                cval = _converthelp(c, KEEPNONE)
+                if cval is not None or KEEPNONE:
+                    v[c.tag] = cval
             return v
 
-def convert(element):
-    return _converthelp(element)
+def convert(element, KEEPNONE):
+    return _converthelp(element, KEEPNONE)
 
-def readxmlfile(file):
+def readxmlfile(file, KEEPNONE):
     """
     Read an XML file and convert it to an object in the Parker convention.
     """
@@ -62,17 +67,17 @@ def readxmlfile(file):
         import cElementTree as ET
     tree = ET.parse(file)
     root = tree.getroot()
-    return {root.tag: _converthelp(root) }
+    return {root.tag: _converthelp(root, KEEPNONE) }
 
-def convertxmlstring(str):
+def convertxmlstring(str, KEEPNONE):
     """
     Read XML from a string and convert it to an object in the Parker convention.
     """
     import xml.etree.cElementTree as ET
     root = ET.fromstring(str)
-    return {root.tag: _converthelp(root) }
+    return {root.tag: _converthelp(root, KEEPNONE) }
 
 if __name__ == "__main__":
     import sys
     import simplejson as json
-    json.dump(readxmlfile(sys.stdin), sys.stdout, indent=4)
+    json.dump(readxmlfile(sys.stdin, KEEPNONE=True), sys.stdout, indent=4)
