@@ -42,10 +42,14 @@ class IDmap:
         """ Return True iff this key is in the map, or if self.allow_unknown is True """
         return key in self.map or self.allow_unknown
 
-    def id(self, key):
+    def id(self, key, add_if_key_doesnt_exist=False):
         """
         Get the ID for this string.
         """
+        if add_if_key_doesnt_exist and key not in self.map:
+            self.add(key)
+            assert key in self.map
+
         if key in self.map: return self.map[key]
         if self.allow_unknown:
 #            import sys
