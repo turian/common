@@ -80,4 +80,5 @@ def convertxmlstring(str, KEEPNONE):
 if __name__ == "__main__":
     import sys
     import simplejson as json
-    json.dump(readxmlfile(sys.stdin, KEEPNONE=True), sys.stdout, indent=4)
+    json.dump(readxmlfile(sys.stdin, KEEPNONE=False), sys.stdout, indent=4)
+#    json.dump(readxmlfile(sys.stdin, KEEPNONE=True), sys.stdout, indent=4)

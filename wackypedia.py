@@ -13,8 +13,8 @@ import sys
 import string
 import re
 import os.path
-#WACKYDIR = os.path.expanduser("~/data/wikipedia/wackypedia_en/")
-WACKYDIR = os.path.expanduser("~/data/wikipedia/wackpedia-INCOMPLETE/")
+WACKYDIR = os.path.expanduser("~/data/wikipedia/wackypedia_en/")
+#WACKYDIR = os.path.expanduser("~/data/wikipedia/wackpedia-INCOMPLETE/")
 
 WACKYFILES = ["wackypedia_en%d.gz" % i for i in range(1, 4+1)]
 
