@@ -1,11 +1,21 @@
 
-
-import re
-entity_re = re.compile("&(#?)(\d{1,5}|\w{1,8});")
 def decode_entities(string):
+    """
+    Decode HTML entities until there are no more to decode.
+    """
+    oldstring = ""
+    while string != oldstring:
+        oldstring = string
+        string = decode_entities_help(oldstring)
+    return string
+
+def decode_entities_help(string):
     """
     From: http://snippets.dzone.com/posts/show/4569
     """
+    import re
+    entity_re = re.compile("&(#?)(\d{1,5}|\w{1,8});")
+
     def substitute_entity(match):
         from htmlentitydefs import name2codepoint as n2cp
         ent = match.group(2)
