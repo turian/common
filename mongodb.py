@@ -11,6 +11,7 @@ import os.path
 import lucene
 
 from common.movingaverage import MovingAverage
+import common.mylucene
 
 _connection = None
 _collection = {}
@@ -70,6 +71,7 @@ def to_lucene(collection, store_fields, content_field, lucene_dir, matchfn=lambd
     A field called "content" is created.
     store_fields: list. store, don't index, this field.
     content_field: string. index, don't store, this field.
+    TODO: Don't assume we convert Lucene "id" into an *INT* MongoDB "_id" ?
     """
     print >> sys.stderr, "Storing lucene directory in: %s" % lucene_dir
 
@@ -83,6 +85,16 @@ def to_lucene(collection, store_fields, content_field, lucene_dir, matchfn=lambd
     assert "content" not in store_fields
     for i, origdoc in enumerate(findall(collection, matchfn, matchfn_description, title, logevery, timeout)):
         doc = lucene.Document()
+
+        # Add the Mongo "_id" as the Lucene "id", but we assume this is an int.
+        assert isinstance(origdoc["_id"], int)
+        value = origdoc["_id"]
+        if not isinstance(value, str):
+            value = `value`
+        doc.add(lucene.Field("id", value,
+                                 lucene.Field.Store.YES,
+                                 lucene.Field.Index.UN_TOKENIZED))
+
         for f in store_fields:
             value = origdoc[f]
             if not isinstance(value, str):
@@ -109,3 +121,22 @@ def to_lucene(collection, store_fields, content_field, lucene_dir, matchfn=lambd
     writer.close()
     print >> sys.stderr, 'done'
 
+def search_lucene(querytext, mongodb_collection):
+    """
+    Search Lucene, and key the ids against the MongoDB.
+    Yield a list of (score, mongodoc).
+    TODO: Don't assume we convert Lucene "id" into an *INT* MongoDB "_id" ?
+    """
+    query = lucene.QueryParser("content", common.mylucene.analyzer).parse(querytext)
+    hits = common.mylucene.searcher.search(query)
+    print >> sys.stderr, "%s total matching documents for query %s" % (hits.length(), query)
+
+    if len(hits) > 0:
+        for i, hit in enumerate(hits):
+            hit = lucene.Hit.cast_(hit)
+#            print hit.getScore()
+            doc = hit.getDocument()
+
+            mongodoc = mongodb_collection.find_one({"_id": int(doc.get("id"))})
+            assert mongodoc is not None
+            yield hit.getScore(), mongodoc

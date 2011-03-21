@@ -7,4 +7,4 @@ import mytime
 import str
 import movingaverage
 import mongodb
-import lucene
+import mylucene
