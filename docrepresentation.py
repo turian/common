@@ -54,6 +54,14 @@ class DocRepresentation:
             self._repr[term] += r._repr[term]
         return self
 
+    def __imul__(self, x):
+        """
+        Multiply a weight factor, in place.
+        """
+        for term in self._repr:
+            self._repr[term] *= x
+        return self
+
     def l2normalize(self):
         """
         l2normalize this representation, in-place.
