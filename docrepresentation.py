@@ -62,24 +62,25 @@ class DocRepresentation:
             self._repr[term] *= x
         return self
 
-    def l2normalize(self):
-        """
-        l2normalize this representation, in-place.
-        """
+    @property
+    def l2norm(self):
         l2norm = 0.
         for term in self._repr:
             weight = self._repr[term]
             l2norm += weight * weight
         l2norm = math.sqrt(l2norm)
-        for term in self._repr:
-            self._repr[term] /= l2norm
+        return l2norm
 
-        tmp_weight = 0.
+    def l2normalize(self):
+        """
+        l2normalize this representation, in-place.
+        """
+        orig_l2norm = self.l2norm
         for term in self._repr:
-            weight = self._repr[term]
-            tmp_weight += weight * weight
-        if not common.floateq.floateq(tmp_weight, 1.):
-            print >> sys.stderr, "WHA!?!? %f != 1." % tmp_weight
+            self._repr[term] /= orig_l2norm
+
+        if not common.floateq.floateq(self.l2norm, 1.):
+            print >> sys.stderr, "WHA!?!? %f != 1." % self.l2norm
 
     def crop(self):
         """
