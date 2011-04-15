@@ -6,6 +6,7 @@ TODO: What is the proper way to combine representations? Is adding principled?
 
 from collections import defaultdict
 
+import sys
 import math
 
 import common.floateq
@@ -19,10 +20,30 @@ class DocRepresentation:
         """
         Import a dict, {term: weight}
         """
-        self._repr = defaultdict(float)
+        self.initialize()
         if dic is not None:
-            for term in dic:
-                self._repr[term] = dic[term]
+            self.from_dict(dict)
+
+    def initialize(self):
+        self._repr = defaultdict(float)
+
+    def from_dict(self, dic):
+        """
+        Initialize and overwrite this docrepr, from a dict.
+        """
+        self.initialize()
+        for term in dic:
+            self._repr[term] = dic[term]
+
+    def from_weight_count_term_list(self, lis):
+        """
+        Initialize and overwrite this docrepr, from a (weight, count, term).
+        """
+        self.initialize()
+        dic = {}
+        for weight, count, term in lis:
+            dic[term] = weight
+        self.from_dict(dic)
 
     def __iadd__(self, r):
         """
