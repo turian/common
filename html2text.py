@@ -26,6 +26,7 @@ import os.path
 import sys
 import tempfile, shutil, os
 from common.stats import stats
+import common.json
 import re
 
 def html2text(html, html2textrc=os.path.expanduser("~/dev/common-scripts/html2text/html2textrc"), forceoutput=True, veryquiet=True):
@@ -86,9 +87,23 @@ def boilerpipe_url2text(url):
     return data
 
 #http://boilerpipe-web.appspot.com/extract?url=http%3A%2F%2Fnarrativebranding.wordpress.com%2F2010%2F08%2F18%2Fgone-fishin%2F+&extractor=ArticleExtractor&output=text
+
+def diffbot_url2text(url, token):
+    """
+    Use diffbot article API: http://www.diffbot.com/docs/api/article
+    """
+    import urllib,urllib2
+    newurl = "http://www.diffbot.com/api/article?token=%s&url=%s" % (token, urllib.quote_plus(url))
+#    print newurl
+    f = urllib2.urlopen(newurl)
+    data = f.read()
+    f.close()
+    return common.json.loads(data)
+
     
 
 if __name__ == "__main__":
 #    import sys
 #    print html2text(sys.stdin.read())
-    print boilerpipe_url2text("http://www.bianet.org/english/freedom-of-expression/122506-dairy-company-yorsan-advocates-for-internet-censorship")
+#    print boilerpipe_url2text("http://www.bianet.org/english/freedom-of-expression/122506-dairy-company-yorsan-advocates-for-internet-censorship")
+    print common.json.dumps(diffbot_url2text("http://www.bianet.org/english/freedom-of-expression/122506-dairy-company-yorsan-advocates-for-internet-censorship", "XXXXX"), indent=4)
