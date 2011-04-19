@@ -22,7 +22,7 @@ class DocRepresentation:
         """
         self.initialize()
         if dic is not None:
-            self.from_dict(dict)
+            self.from_dict(dic)
 
     def initialize(self):
         self._repr = defaultdict(float)
