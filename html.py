@@ -20,7 +20,10 @@ def decode_entities_help(string):
         from htmlentitydefs import name2codepoint as n2cp
         ent = match.group(2)
         if match.group(1) == "#":
-            return unichr(int(ent))
+            if ent[0] == 'x':   # e.g. &x0a;
+                return unichr(int(ent[1:], 16))
+            else:
+                return unichr(int(ent))
         else:
             cp = n2cp.get(ent)
 
