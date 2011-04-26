@@ -9,6 +9,9 @@ import numpy
 import logging
 import common.str
 
+from collections import defaultdict
+import sys
+
 class SparseDictToCSRMatrix:
     def __init__(self):
         return
@@ -23,7 +26,7 @@ class SparseDictToCSRMatrix:
             for fvec in features:
                 for f in fvec:
                     keycnt[f] += 1
-            tot = 0
+            tot = len(keycnt)
             for f in keycnt.keys():
                 if keycnt[f] < mincount:
                     del keycnt[f]
