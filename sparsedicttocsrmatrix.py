@@ -7,15 +7,28 @@ import scipy.sparse
 import numpy
 
 import logging
+import common.str
 
 class SparseDictToCSRMatrix:
     def __init__(self):
         return
-    def train(self, features):
+    def train(self, features, mincount=None):
 #        print features
-        keys = set()
-        for f in features:
-            keys.update(f.keys())
+        if mincount is None:
+            keys = set()
+            for f in features:
+                keys.update(f.keys())
+        else:
+            keycnt = defaultdict(int)
+            for fvec in features:
+                for f in fvec:
+                    keycnt[f] += 1
+            tot = 0
+            for f in keycnt.keys():
+                if keycnt[f] < mincount:
+                    del keycnt[f]
+            print >> sys.stderr, "SparseDictToCSRMatrix.train kept %s features with mincount threshold %d" % (common.str.percent(len(keycnt), tot), mincount)
+            keys = keycnt.keys()
         self.idmap = common.idmap.IDmap(keys)
         return self.__call__(features)
 
