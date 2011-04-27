@@ -16,6 +16,9 @@ class SparseDictToCSRMatrix:
     def __init__(self):
         return
     def train(self, features, mincount=None):
+        """
+        Create a feature map and return a sparse matrix over these features.
+        """
 #        print features
         if mincount is None:
             keys = set()
@@ -43,7 +46,7 @@ class SparseDictToCSRMatrix:
             keyvalues = []
             for key in f:
                 if not self.idmap.exists(key):
-                    logging.debug("KEY %s does not exist" % key)
+#                    logging.debug("KEY %s does not exist" % key)
                     continue
                 keyvalues.append((self.idmap.id(key), f[key]))
             keyvalues.sort()
