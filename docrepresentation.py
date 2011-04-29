@@ -129,4 +129,5 @@ class DocRepresentation:
         return [{"value": term, "weight": weight} for weight, term in dictsort(self._repr)[:50]]
 
     def __str__(self):
-        return `dictsort(self._repr)[:50]`
+        return `dictsort(self._repr)[:10]`
+#        return `dictsort(self._repr)[:50]`

@@ -1,3 +1,7 @@
+"""
+These methods are deprecated by w3lib.html.remove_entities
+"""
+
 
 def decode_entities(string):
     """
