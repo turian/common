@@ -28,7 +28,10 @@ def wackydocs():
     for i, fil in enumerate(WACKYFILES):
         print >> sys.stderr, "Reading wackypedia file %s %s..." % (fil, common.str.percent(i+1, len(WACKYFILES)))
         print >> sys.stderr, stats()
-        for doc in wackydocs_in_file(fil):
+        for j, doc in enumerate(wackydocs_in_file(fil)):
+            if j % 10000 == 0:
+                print >> sys.stderr, "Reading wackypedia file %s %s, document #%d..." % (fil, common.str.percent(i+1, len(WACKYFILES)), j)
+                print >> sys.stderr, stats()
             yield doc
 
 def wackydocs_in_file(fil):
