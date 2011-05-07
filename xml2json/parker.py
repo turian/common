@@ -43,6 +43,8 @@ def _converthelp(tree, KEEPNONE):
         assert tree.text is None or wsre.match(tree.text)
         cnames = {}
         for c in children: cnames[c.tag] = 1
+        if not (len(cnames) == 1 or len(cnames) == len(children)):
+            print >> sys.stderr, cnames, children
         assert len(cnames) == 1 or len(cnames) == len(children)
         if len(cnames) == 1 and len(children) > 1:
             return [_converthelp(c, KEEPNONE) for c in children]
