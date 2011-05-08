@@ -42,6 +42,7 @@ class SparseDictToCSRMatrix:
         data = []
         row = []
         col = []
+        assert type(features) == list
         for k, f in enumerate(features):
             keyvalues = []
             for key in f:
