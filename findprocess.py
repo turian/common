@@ -11,17 +11,21 @@ def pids(processname, entireline=True):
 
     pids = []
     for line in os.popen('ps xa'):
-        fields  = line.split()
-        pid     = fields[0]
-        process = fields[4]
+        try:
+            fields  = line.split()
+            pid     = fields[0]
+            process = fields[4]
 
-        if entireline: searchstr = line
-        else: searchstr = process
+            if entireline: searchstr = line
+            else: searchstr = process
 
-#        if searchstr.find(processname) > 0:
-        if searchstr.find(processname) >= 0:
-#            print line
-            pids.append(int(pid))
+    #        if searchstr.find(processname) > 0:
+            if searchstr.find(processname) >= 0:
+    #            print line
+                pids.append(int(pid))
+        except Exception, e:
+            print >> sys.stderr, type(e), e
+
     return pids
 
 if __name__ == "__main__":
