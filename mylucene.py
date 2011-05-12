@@ -4,9 +4,12 @@ import sys
 analyzer = None
 searcher = None
 
-from lucene import \
-    QueryParser, IndexSearcher, StandardAnalyzer, FSDirectory, Hit, \
-    VERSION, initVM, CLASSPATH
+try:
+    from lucene import \
+        QueryParser, IndexSearcher, StandardAnalyzer, FSDirectory, Hit, \
+        VERSION, initVM, CLASSPATH
+except:
+    print >> sys.stderr, "Could not import lucene"
 
 def init(lucenedir):
     global analyzer, searcher

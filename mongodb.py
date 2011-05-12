@@ -8,7 +8,10 @@ from common.stats import stats
 
 import sys
 import os.path
-import lucene
+try:
+    import lucene
+except:
+    print >> sys.stderr, "Could not import lucene"
 
 from common.movingaverage import MovingAverage
 import common.mylucene
