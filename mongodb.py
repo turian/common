@@ -30,10 +30,17 @@ def collection(DATABASE, name="documents", HOSTNAME=None, PORT=None):
     return _collection[DATABASE][name]
 
 def db(DATABASE, HOSTNAME=None, PORT=None):
-    global _connection, _db
+    global _db
     if DATABASE not in _db:
         # Open the collection, since it is not yet open.
-    
+        _db[DATABASE] = connection(HOSTNAME, PORT)[DATABASE]
+    assert DATABASE in _db
+    return _db[DATABASE]
+
+def connection(HOSTNAME=None, PORT=None):
+    global _connection
+    if _connection is None:
+    # TODO: one connection per HOSTNAME, PORT
         from pymongo.connection import Connection
         # Each of these are equivalent, the first two make use of default arguments.
         if HOSTNAME is None:
@@ -41,9 +48,8 @@ def db(DATABASE, HOSTNAME=None, PORT=None):
             _connection = Connection()
         else:
             _connection = Connection(HOSTNAME, PORT)
-        _db[DATABASE] = _connection[DATABASE]
-    assert DATABASE in _db
-    return _db[DATABASE]
+    assert _connection is not None
+    return _connection
 
 def findall(collection, matchfn, matchfn_description="match", title="", logevery=1000, timeout=False):
     """
