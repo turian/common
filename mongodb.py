@@ -51,14 +51,22 @@ def connection(HOSTNAME=None, PORT=None):
     assert _connection is not None
     return _connection
 
-def findall(collection, matchfn, matchfn_description="match", title="", logevery=1000, timeout=False):
+def findall_with_field(collection, field, title="", logevery=1000, timeout=False):
     """
-    Iterate over a document collection, and yield all documents for which matchfn(doc) is true.
+    Find all documents that have some field.
+    """
+    for doc in findall(collection, spec={field: {"$exists": True}}, matchfn_description="Document contains field %s" % repr(field), title=title, logevery=logevery, timeout=timeout):
+        yield doc
+
+def findall(collection, spec=None, matchfn=lambda doc: True, matchfn_description="match", title="", logevery=1000, timeout=False):
+    """
+    Iterate over a document collection, and yield all documents for which matchfn(doc) is true AND that match spec.
+    NB: Spec is faster than matchfn, because it is run server-side.
     Periodically output statistics about how many match, using matchfn_description (a plural verb, e.g. "match")
     """
     matchcnt = MovingAverage()
     from common.defaultdict import defaultdict
-    for i, doc in enumerate(collection.find(timeout=timeout)):
+    for i, doc in enumerate(collection.find(spec=spec, timeout=timeout)):
         if i % logevery == 0 and i > 0 and i <= collection.count():
             logging.info("%s Done with %s of documents, %s of documents %s" % (title, percent(i, collection.count()), matchcnt, matchfn_description))
             logging.info(stats())
