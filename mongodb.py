@@ -58,7 +58,7 @@ def findall_with_field(collection, field, title="", logevery=1000, timeout=False
     for doc in findall(collection, spec={field: {"$exists": True}}, matchfn_description="Document contains field %s" % repr(field), title=title, logevery=logevery, timeout=timeout):
         yield doc
 
-def findall(collection, spec=None, matchfn=lambda doc: True, matchfn_description="match", title="", logevery=1000, timeout=False):
+def findall(collection, matchfn=lambda doc: True, spec=None, matchfn_description="match", title="", logevery=1000, timeout=False):
     """
     Iterate over a document collection, and yield all documents for which matchfn(doc) is true AND that match spec.
     NB: Spec is faster than matchfn, because it is run server-side.
