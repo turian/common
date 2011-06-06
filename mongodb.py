@@ -68,8 +68,12 @@ def findall(collection, matchfn=lambda doc: True, spec=None, matchfn_description
     from common.defaultdict import defaultdict
     cursor = collection.find(spec=spec, timeout=timeout)
     for i, doc in enumerate(cursor):
-        if i % logevery == 0 and i > 0 and i <= collection.count():
-            logging.info("%s Done with %s of documents, %s of documents %s" % (title, percent(i, cursor.count()), matchcnt, matchfn_description))
+#        print cursor.count()
+#        if i % logevery == 0 and i <= cursor.count():
+#            logging.info("%s Done with %s of documents, %s of documents %s" % (title, percent(i, cursor.count()), matchcnt, matchfn_description))
+#            logging.info(stats())
+        if i % logevery == 0 and i > 0:
+            logging.info("%s Done with %d documents, %s of documents %s" % (title, i, matchcnt, matchfn_description))
             logging.info(stats())
 
         if not matchfn(doc):
