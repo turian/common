@@ -44,7 +44,8 @@ import StringIO
 
 models = {}
 
-def tokenize(text, tokenize=False, splitta_dir=os.path.join(os.environ["UTILS"], "src/splitta.svn/"), model_path="model_svm", verbose=False):
+def tokenize(text, tokenize=False, splitta_dir=os.path.join(os.environ["UTILS"], "src/splitta.svn/"), model_path="model_nb", verbose=False):
+    # Use model_nb (Naive Bayes) not SVM by default, since SVM requires svmlight (licensing restrictions)
     assert os.path.isdir(splitta_dir)
     if splitta_dir not in sys.path:
         sys.path.append(splitta_dir)
@@ -76,4 +77,5 @@ def tokenize(text, tokenize=False, splitta_dir=os.path.join(os.environ["UTILS"],
 
 if __name__ == "__main__":
     txt = sys.stdin.read()
-    print tokenize(txt)
+    for l in tokenize(txt.decode("utf-8")):
+        print l.encode("utf-8")
