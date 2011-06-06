@@ -66,9 +66,10 @@ def findall(collection, matchfn=lambda doc: True, spec=None, matchfn_description
     """
     matchcnt = MovingAverage()
     from common.defaultdict import defaultdict
-    for i, doc in enumerate(collection.find(spec=spec, timeout=timeout)):
+    cursor = collection.find(spec=spec, timeout=timeout)
+    for i, doc in enumerate(cursor)
         if i % logevery == 0 and i > 0 and i <= collection.count():
-            logging.info("%s Done with %s of documents, %s of documents %s" % (title, percent(i, collection.count()), matchcnt, matchfn_description))
+            logging.info("%s Done with %s of documents, %s of documents %s" % (title, percent(i, cursor.count()), matchcnt, matchfn_description))
             logging.info(stats())
 
         if not matchfn(doc):
