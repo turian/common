@@ -28,6 +28,7 @@ import tempfile, shutil, os
 from common.stats import stats
 import common.json
 import re
+import urllib,urllib2
 
 def html2text(html, html2textrc=os.path.expanduser("~/dev/common-scripts/html2text/html2textrc"), forceoutput=True, veryquiet=True):
     """
@@ -74,11 +75,16 @@ def batch_nclean(htmls, strip_html_output=True, ncleaner=os.path.join(os.environ
     shutil.rmtree(outdir, ignore_errors=False, onerror=lambda function, path, excinfo: sys.stderr.write("Could not shutil.rmtree, function=%s, path=%s, excinfo=%s\n" % function, path, excinfo))
     return txts
 
+def boilerpipe_html2text(html):
+    values = {"text": html.encode("utf-8"), "extractor": "DefaultExtractor", "output": "text"}
+    data = urllib.urlencode(values)
+    boilerpipe_response = urllib2.urlopen("http://localhost:8080/boilerpipe-api/extract", data)
+    return boilerpipe_response.read().decode("utf-8")
+
 def boilerpipe_url2text(url):
     """
     Use Kohlschuetter Search Intelligence's boilerpipe boilerplate stripper.
     """
-    import urllib,urllib2
     newurl = "http://boilerpipe-web.appspot.com/extract?url=%s+&extractor=ArticleExtractor&output=text" % urllib.quote_plus(url)
 #    print newurl
     f = urllib2.urlopen(newurl)
