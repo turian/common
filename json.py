@@ -5,9 +5,16 @@ JSON convenience routines.
 import simplejson
 
 loads = simplejson.loads
-dumps = simplejson.dumps
+_dumps = simplejson.dumps
 load = simplejson.load
-dump = simplejson.dump
+_dump = simplejson.dump
+
+# From http://stackoverflow.com/a/2680060
+import datetime
+dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
+dumps = lambda f: _dumps(f, default=dthandler)
+dump = lambda f: _dump(f, default=dthandler)
+
 
 from common.stats import stats
 from common.file import myopen
@@ -28,7 +35,7 @@ def dumpfile(object, filename, verbose=False, **kwargs):
     Dump JSON to a filename.
     """
     if verbose: print >> sys.stderr, "common.json.dumpfile(object, %s)...\n%s" % (repr(filename), stats())
-    r = dump(object, myopen(filename, "wb"), **kwargs)
+    r = _dump(object, myopen(filename, "wb"), **kwargs)
     if verbose: print >> sys.stderr, "...common.json.dumpfile(object, %s)\n%s" % (repr(filename), stats())
     return r
 
