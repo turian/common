@@ -124,6 +124,31 @@ class DocRepresentation:
             tot += weight
         return tot
 
+    def cosine(self, r):
+        """
+        Find the cosine of each term between these two representations.
+        Return a list sorted by descosine, and also
+        indicate whether the weight has increased or decreased from self
+        to r.
+        """
+        allterms = frozenset(self._repr.keys() + r._repr.keys())
+        err = {}
+        for t in allterms:
+            c = (self._repr[t] * r._repr[t])
+            err[t] = (c, +1 if diff > 0 else -1)
+        return dictsort(err, increasing=True)[:100]
+
+    def cosine_total(self, r):
+        """
+        Find the total cosine.
+        """
+        tot = 0.
+        for (weight, direction), term in self.sqrerr(r):
+            tot += weight
+        tot /= self.l2norm
+        tot /= r.l2norm
+        return tot
+
     @property
     def xmlrepr(self):
         return [{"value": term, "weight": weight} for weight, term in dictsort(self._repr)[:50]]
