@@ -21,13 +21,14 @@ class IDmap:
     """
     def __init__(self, keys=[], allow_unknown=False, unknown_key="*UNKNOWN*"):
         self.unknown_key = unknown_key
-        self.allow_unknown = allow_unknown
         self.map = {}
         self.reverse_map = []
-        if self.allow_unknown:
+        self.allow_unknown = False      # We'll set this to allow_unknown AFTER running add on all the keys
+        if allow_unknown:
             self.add(self.unknown_key)
         for key in keys:
             self.add(key)
+        self.allow_unknown = allow_unknown
 
     def add(self, key):
         """ Add key to map. """
