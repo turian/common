@@ -62,6 +62,10 @@ class IDmap:
         """ Get the key for this ID. """
         return self.reverse_map[id]
 
+    def __getitem__(self, k):
+        if type(k) == int: return self.key(k)
+        else: return self.id(k)
+
     @property
     def all(self):
         """ All keys. """
