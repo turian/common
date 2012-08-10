@@ -7,7 +7,10 @@ httplib.HTTPConnection.debuglevel = 1
 useragent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)'
 # see these: http://techpatterns.com/forums/about304.html
 
-def fetch(url, decode=False, timeout=15):
+TOR_WORKS = False
+
+#def fetch(url, decode=False, timeout=15):
+def fetch(url, decode=True, timeout=15):
     """
     Return the text of a particular URL
     If decode, then attempt to decode the text.
@@ -17,6 +20,31 @@ def fetch(url, decode=False, timeout=15):
     request.add_header('User-Agent', useragent)
     opener = urllib2.build_opener()
     response = opener.open(request, timeout=timeout)
+    if decode:
+        return decode_response(response)
+    else:
+        data = response.read()
+        return data
+
+def torfetch(url, decode=True, timeout=60):
+    torcheck()
+    return _torfetch(url, decode=decode, timeout=timeout)
+
+def torcheck():
+    """
+    Check that tor is working.
+    """
+    global TOR_WORKS
+    if not TOR_WORKS:
+        assert _torfetch("https://check.torproject.org/").find("Congratulations. Your browser is configured to use Tor.") != -1
+        TOR_WORKS = True
+
+def _torfetch(url, decode=True, timeout=60):
+    # This is broken
+    proxy_support = urllib2.ProxyHandler({"http" : "127.0.0.1:8118", "https": "127.0.0.1:8118"})
+    opener = urllib2.build_opener(proxy_support) 
+    opener.addheaders = [('User-agent', useragent)]
+    response = opener.open(url, timeout=timeout)
     if decode:
         return decode_response(response)
     else:
