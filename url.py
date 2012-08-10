@@ -7,6 +7,11 @@ httplib.HTTPConnection.debuglevel = 1
 useragent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)'
 # see these: http://techpatterns.com/forums/about304.html
 
+from StringIO import StringIO
+import gzip
+
+import telnetlib
+
 TOR_WORKS = False
 
 #def fetch(url, decode=False, timeout=15):
@@ -18,6 +23,7 @@ def fetch(url, decode=True, timeout=15):
     request = urllib2.Request(url)
     request.get_full_url()
     request.add_header('User-Agent', useragent)
+    request.add_header('Accept-Encoding', 'gzip')
     opener = urllib2.build_opener()
     response = opener.open(request, timeout=timeout)
     if decode:
@@ -39,11 +45,30 @@ def torcheck():
         assert _torfetch("https://check.torproject.org/").find("Congratulations. Your browser is configured to use Tor.") != -1
         TOR_WORKS = True
 
+def torchange():
+    """
+    Change the tor nym.
+    """
+#    log.msg('Changing proxy', level=log.INFO)
+    print >> sys.stderr, "Changing proxy"
+    tn = telnetlib.Telnet('127.0.0.1', 9051)
+    tn.read_until("Escape character is '^]'.", 2)
+    tn.write('AUTHENTICATE "267765"\r\n')
+    tn.read_until("250 OK", 2)
+    tn.write("signal NEWNYM\r\n")
+    tn.read_until("250 OK", 2)
+    tn.write("quit\r\n")
+    tn.close()
+#    time.sleep(3)
+#    log.msg('Proxy changed', level=log.INFO)
+    print >> sys.stderr, "Proxy changed"
+
+
 def _torfetch(url, decode=True, timeout=60):
     # This is broken
     proxy_support = urllib2.ProxyHandler({"http" : "127.0.0.1:8118", "https": "127.0.0.1:8118"})
     opener = urllib2.build_opener(proxy_support) 
-    opener.addheaders = [('User-agent', useragent)]
+    opener.addheaders = [('User-agent', useragent), ('Accept-Encoding', 'gzip')]
     response = opener.open(url, timeout=timeout)
     if decode:
         return decode_response(response)
@@ -69,6 +94,12 @@ def decode_response(response):
     5. windows-1252
     """
     text = response.read()
+
+    # Attempt to ungzip
+    if response.info().get('Content-Encoding') == 'gzip':
+        buf = StringIO(text)
+        f = gzip.GzipFile(fileobj=buf)
+        text = f.read()
 
     charset = response.headers.getparam('charset')
     if charset is not None:
