@@ -62,6 +62,9 @@ def torchange():
 #    time.sleep(3)
 #    log.msg('Proxy changed', level=log.INFO)
     print >> sys.stderr, "Proxy changed"
+    # Check that Tor works again.
+    TOR_WORKS = None
+    torcheck()
 
 
 def _torfetch(url, decode=True, timeout=60):
