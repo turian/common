@@ -1,4 +1,30 @@
+"""
+To configure Privoxy+Tor:
 
+    # Check tor:
+    tsocks lynx https://check.torproject.org/
+
+(I couldn't get Polipo working, so I used Privoxy)
+
+https://groups.google.com/forum/?fromgroups#!topic/scrapy-users/WqMLnKbA43I
+
+Make sure tor is running with control mode:
+    In [1]: import telnetlib
+    In [2]: tn = telnetlib.Telnet('127.0.0.1', 9051)
+If not, edit the torrc:
+    SocksPort 9050 # what port to open for local application connections
+    SocksListenAddress 127.0.0.1 # accept connections only from localhost
+    RunAsDaemon 1
+    ControlPort 9051
+
+Remember to edit /etc/socks/tsocks.conf (provided by tor)
+and privoxy's config. Read the docs, it should at least include: forward-socks4a / localhost:9050 .
+
+
+Start the spider with *tsocks* and persistence:
+
+    tsocks scrapy crawl fullsite -s JOBDIR=crawls/fullsitespider-`date +'%F-%T'`
+"""
 import httplib
 import urllib2
 import sys
