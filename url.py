@@ -33,6 +33,8 @@ httplib.HTTPConnection.debuglevel = 1
 useragent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)'
 # see these: http://techpatterns.com/forums/about304.html
 
+from common.str import percent
+
 from StringIO import StringIO
 import gzip
 
@@ -58,9 +60,15 @@ def fetch(url, decode=True, timeout=15):
         data = response.read()
         return data
 
-def torfetch(url, decode=True, timeout=60):
+def torfetch(url, decode=True, timeout=60, retries=5):
     torcheck()
-    return _torfetch(url, decode=decode, timeout=timeout)
+    for i in range(retries):
+        try:
+            html = _torfetch(url, decode=decode, timeout=timeout)
+            return html
+        except Exception, e:
+            print >> sys.stderr, "torfetch(), try %s: %s %" % (percent(i+1, retries), type(e), e)
+            torchange()
 
 def torcheck():
     """
