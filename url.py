@@ -68,7 +68,10 @@ def torfetch(url, decode=True, timeout=60, retries=5):
             return html
         except Exception, e:
             print >> sys.stderr, "torfetch(), try %s: %s %" % (percent(i+1, retries), type(e), e)
-            torchange()
+            if i < retries-1:
+                torchange()
+            else:
+                raise
 
 def torcheck():
     """
