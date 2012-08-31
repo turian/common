@@ -1,4 +1,30 @@
+"""
+To configure Privoxy+Tor:
 
+    # Check tor:
+    tsocks lynx https://check.torproject.org/
+
+(I couldn't get Polipo working, so I used Privoxy)
+
+https://groups.google.com/forum/?fromgroups#!topic/scrapy-users/WqMLnKbA43I
+
+Make sure tor is running with control mode:
+    In [1]: import telnetlib
+    In [2]: tn = telnetlib.Telnet('127.0.0.1', 9051)
+If not, edit the torrc:
+    SocksPort 9050 # what port to open for local application connections
+    SocksListenAddress 127.0.0.1 # accept connections only from localhost
+    RunAsDaemon 1
+    ControlPort 9051
+
+Remember to edit /etc/socks/tsocks.conf (provided by tor)
+and privoxy's config. Read the docs, it should at least include: forward-socks4a / localhost:9050 .
+
+
+Start the spider with *tsocks* and persistence:
+
+    tsocks scrapy crawl fullsite -s JOBDIR=crawls/fullsitespider-`date +'%F-%T'`
+"""
 import httplib
 import urllib2
 import sys
@@ -6,6 +32,8 @@ httplib.HTTPConnection.debuglevel = 1
 #useragent = 'Mozilla/4.51 (Macintosh; U; PPC)'
 useragent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727)'
 # see these: http://techpatterns.com/forums/about304.html
+
+from common.str import percent
 
 from StringIO import StringIO
 import gzip
@@ -32,9 +60,18 @@ def fetch(url, decode=True, timeout=15):
         data = response.read()
         return data
 
-def torfetch(url, decode=True, timeout=60):
+def torfetch(url, decode=True, timeout=60, retries=5):
     torcheck()
-    return _torfetch(url, decode=decode, timeout=timeout)
+    for i in range(retries):
+        try:
+            html = _torfetch(url, decode=decode, timeout=timeout)
+            return html
+        except Exception, e:
+            print >> sys.stderr, "torfetch(), try %s: %s %" % (percent(i+1, retries), type(e), e)
+            if i < retries-1:
+                torchange()
+            else:
+                raise
 
 def torcheck():
     """
