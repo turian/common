@@ -25,7 +25,6 @@ def readcsv(file, **fmtparams):
             r = OrderedDict()
             assert len(keys) == len(row)
             for k, v in zip(keys, row):
-                print (k, v)
                 if not k or k == "":
                     if not v or v == "": continue
                     if "_misc" not in r: r["_misc"] = []

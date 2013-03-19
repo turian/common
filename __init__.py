@@ -6,5 +6,5 @@ import misc
 import mytime
 import str
 import movingaverage
-import mongodb
-import mylucene
+#import mongodb
+#import mylucene
