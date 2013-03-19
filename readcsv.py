@@ -16,18 +16,18 @@ def readcsv(file):
 
     keys = None
     rows = []
-    reader = csv.reader(open(filename))
+    reader = csv.reader(file)
     for row in reader:
         if not keys:
             keys = row
         else:
-            row = OrderedDict()
+            r = OrderedDict()
             for k, v in zip(keys, row):
-                if not key or key == "":
-                    if "_misc" not in row: row["_misc"] = []
-                    row["_misc"].append(v)
+                if not k or k == "":
+                    if "_misc" not in r: r["_misc"] = []
+                    r["_misc"].append(v)
                 else:
-                    assert k not in row
-                    row[k] = v
-            rows.append(row)
+                    assert k not in r
+                    r[k] = v
+            rows.append(r)
     return rows
