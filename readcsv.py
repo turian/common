@@ -11,6 +11,8 @@ def readcsv(file, **fmtparams):
 
     We assume the first line contains all the key names.
 
+    Empty row elements are converted to None.
+
     Any column that has an empty key name is added to a list with key `_misc`.
     Any column with empty key and row element is ignored.
     """
@@ -31,6 +33,7 @@ def readcsv(file, **fmtparams):
                     r["_misc"].append(v)
                 else:
                     assert k not in r
+                    if not v or v == "": v = None
                     r[k] = v
             rows.append(r)
     return rows
